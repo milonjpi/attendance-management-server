@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int                 @id @default(autoincrement())
+  fullName   String
+  userName   String              @unique
+  password   String
+  role       String              @default("user")
+  profileImg String?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  menus      MenuPermission[]
+  subMenus   SubMenuPermission[]
+  sections   SectionPermission[]
+
+  @@map("users")
+}
+
+model MenuPermission {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  label  String
+
+  @@map("menuPermissions")
+}
+
+model SubMenuPermission {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  label  String
+
+  @@map("subMenuPermissions")
+}
+
+model SectionPermission {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  label  String
+
+  @@map("sectionPermissions")
+}
+
+model Designation {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  employees Employee[]
+
+  @@map("designations")
+}
+
+model Department {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  employees Employee[]
+
+  @@map("departments")
+}
+
+model Location {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  employees Employee[]
+
+  @@map("locations")
+}
+
+model Employee {
+  id         Int    @id @default(autoincrement())
+  employeeId String @unique
+  name       String
+
+  designationId Int
+  designation   Designation @relation(fields: [designationId], references: [id])
+
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id])
+
+  locationId Int
+  location   Location @relation(fields: [locationId], references: [id])
+
+  photo String?
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  authLogs    AuthLog[]
+  attendances Attendance[]
+
+  @@map("employees")
+}
+
+model AuthLog {
+  id        Int      @id @default(autoincrement())
+  empId     String
+  employee  Employee @relation(fields: [empId], references: [employeeId])
+  punchTime DateTime
+
+  @@map("authLogs")
+}
+
+model Attendance {
+  id         Int       @id @default(autoincrement())
+  employeeId String
+  employee   Employee  @relation(fields: [employeeId], references: [employeeId])
+  inTime     DateTime
+  outTime    DateTime?
+
+  @@map("attendances")
+}
