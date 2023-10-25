@@ -17,7 +17,7 @@ const addMenu = async (
 };
 
 // remove Menu
-const removeMenu = async (id: string): Promise<MenuPermission | null> => {
+const removeMenu = async (id: number): Promise<MenuPermission | null> => {
   // check is exist
   const isExist = await prisma.menuPermission.findUnique({
     where: {

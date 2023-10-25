@@ -28,7 +28,7 @@ const getDepartments = async (): Promise<Department[]> => {
 };
 
 // get single department
-const getSingleDepartment = async (id: string): Promise<Department | null> => {
+const getSingleDepartment = async (id: number): Promise<Department | null> => {
   const result = await prisma.department.findUnique({
     where: {
       id,
@@ -40,7 +40,7 @@ const getSingleDepartment = async (id: string): Promise<Department | null> => {
 
 // update single department
 const updateDepartment = async (
-  id: string,
+  id: number,
   payload: Partial<Department>
 ): Promise<Department | null> => {
   // check is exist
@@ -69,7 +69,7 @@ const updateDepartment = async (
 };
 
 // delete department
-const deleteDepartment = async (id: string): Promise<Department | null> => {
+const deleteDepartment = async (id: number): Promise<Department | null> => {
   // check is exist
   const isExist = await prisma.department.findUnique({
     where: {

@@ -21,7 +21,7 @@ const addMenu = catchAsync(async (req: Request, res: Response) => {
 
 // remove Menu
 const removeMenu = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await MenuPermissionService.removeMenu(id);
 

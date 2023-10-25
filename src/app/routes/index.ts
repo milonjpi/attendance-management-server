@@ -3,18 +3,12 @@ import { AuthRoutes } from '../modules/auth/auth.route';
 import { UserRoutes } from '../modules/user/user.route';
 import { DesignationRoutes } from '../modules/designation/designation.route';
 import { DepartmentRoutes } from '../modules/department/department.route';
-import { BrandRoutes } from '../modules/brand/brand.route';
-import { BikeModelRoutes } from '../modules/bikeModel/bikeModel.route';
-import { EngineCCRoutes } from '../modules/engineCC/engineCC.route';
-import { BikerRoutes } from '../modules/biker/biker.route';
-import { GuardRoutes } from '../modules/guard/guard.route';
-import { StandLogRoutes } from '../modules/standLog/standLog.route';
 import { MenuPermissionRoutes } from '../modules/menuPermission/menuPermission.route';
 import { SubMenuPermissionRoutes } from '../modules/subMenuPermission/subMenuPermission.route';
 import { SectionPermissionRoutes } from '../modules/sectionPermission/sectionPermission.route';
-import { AuthLogRoutes } from '../modules/authLog/authLog.route';
-import { GuestCardRoutes } from '../modules/guestCard/guestCard.route';
-import { GuestRoutes } from '../modules/guest/guest.route';
+import { LocationRoutes } from '../modules/location/location.route';
+import { EmployeeRoutes } from '../modules/employee/employee.route';
+import { AttendanceRoutes } from '../modules/attendance/attendance.route';
 
 const router = express.Router();
 
@@ -48,40 +42,16 @@ const moduleRoutes = [
     route: DepartmentRoutes,
   },
   {
-    path: '/brand',
-    route: BrandRoutes,
+    path: '/location',
+    route: LocationRoutes,
   },
   {
-    path: '/model',
-    route: BikeModelRoutes,
+    path: '/employee',
+    route: EmployeeRoutes,
   },
   {
-    path: '/engineCC',
-    route: EngineCCRoutes,
-  },
-  {
-    path: '/biker',
-    route: BikerRoutes,
-  },
-  {
-    path: '/guard',
-    route: GuardRoutes,
-  },
-  {
-    path: '/authLog',
-    route: AuthLogRoutes,
-  },
-  {
-    path: '/standLog',
-    route: StandLogRoutes,
-  },
-  {
-    path: '/guest-card',
-    route: GuestCardRoutes,
-  },
-  {
-    path: '/guest',
-    route: GuestRoutes,
+    path: '/attendance',
+    route: AttendanceRoutes,
   },
 ];
 

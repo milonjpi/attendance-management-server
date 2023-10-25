@@ -6,7 +6,7 @@ type IApiResponse<T> = {
   message?: string | null;
   meta?: {
     page: number;
-    size: number;
+    limit: number;
     total: number;
     totalPage: number;
   };

@@ -33,7 +33,7 @@ const getDepartments = catchAsync(async (req: Request, res: Response) => {
 
 // get single Department
 const getSingleDepartment = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await DepartmentService.getSingleDepartment(id);
 
@@ -47,7 +47,7 @@ const getSingleDepartment = catchAsync(async (req: Request, res: Response) => {
 
 // update single department
 const updateDepartment = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const data = req.body;
 
   const result = await DepartmentService.updateDepartment(id, data);
@@ -62,7 +62,7 @@ const updateDepartment = catchAsync(async (req: Request, res: Response) => {
 
 // delete department
 const deleteDepartment = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await DepartmentService.deleteDepartment(id);
 

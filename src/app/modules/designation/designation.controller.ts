@@ -33,7 +33,7 @@ const getDesignations = catchAsync(async (req: Request, res: Response) => {
 
 // get single Designation
 const getSingleDesignation = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await DesignationService.getSingleDesignation(id);
 
@@ -47,7 +47,7 @@ const getSingleDesignation = catchAsync(async (req: Request, res: Response) => {
 
 // update single designation
 const updateDesignation = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const data = req.body;
 
   const result = await DesignationService.updateDesignation(id, data);
@@ -62,7 +62,7 @@ const updateDesignation = catchAsync(async (req: Request, res: Response) => {
 
 // delete designation
 const deleteDesignation = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await DesignationService.deleteDesignation(id);
 

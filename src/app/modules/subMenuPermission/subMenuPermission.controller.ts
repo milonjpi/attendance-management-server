@@ -21,7 +21,7 @@ const addSubMenu = catchAsync(async (req: Request, res: Response) => {
 
 // remove Sub Menu
 const removeSubMenu = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await SubMenuPermissionService.removeSubMenu(id);
 

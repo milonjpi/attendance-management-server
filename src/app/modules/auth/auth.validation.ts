@@ -26,7 +26,7 @@ const signIn = z.object({
 
 const refreshTokenZodSchema = z.object({
   cookies: z.object({
-    parkingToken: z.string({
+    payrollToken: z.string({
       required_error: 'Refresh Token is required',
     }),
   }),

@@ -29,7 +29,7 @@ const getDesignations = async (): Promise<Designation[]> => {
 
 // get single designation
 const getSingleDesignation = async (
-  id: string
+  id: number
 ): Promise<Designation | null> => {
   const result = await prisma.designation.findUnique({
     where: {
@@ -42,7 +42,7 @@ const getSingleDesignation = async (
 
 // update single designation
 const updateDesignation = async (
-  id: string,
+  id: number,
   payload: Partial<Designation>
 ): Promise<Designation | null> => {
   // check is exist
@@ -71,7 +71,7 @@ const updateDesignation = async (
 };
 
 // delete designation
-const deleteDesignation = async (id: string): Promise<Designation | null> => {
+const deleteDesignation = async (id: number): Promise<Designation | null> => {
   // check is exist
   const isExist = await prisma.designation.findUnique({
     where: {

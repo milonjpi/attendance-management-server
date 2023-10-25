@@ -51,16 +51,16 @@ const signIn = async (
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
   }
   // create access token and refresh token
-  const { role } = isUserExist;
+  const { id, role } = isUserExist;
 
   const accessToken = jwtHelpers.createToken(
-    { userName, role },
+    { id, role },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
   const refreshToken = jwtHelpers.createToken(
-    { userName, role },
+    { id, role },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
@@ -86,13 +86,13 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
   }
 
-  const { userName } = verifiedToken;
+  const { id } = verifiedToken;
 
   // checking deleted user's refresh token
 
   const isUserExist = await prisma.user.findUnique({
     where: {
-      userName,
+      id,
     },
     include: {
       menus: true,
@@ -109,7 +109,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
   const newAccessToken = jwtHelpers.createToken(
     {
-      userName: isUserExist.userName,
+      id: isUserExist.id,
       role: isUserExist.role,
     },
     config.jwt.secret as Secret,

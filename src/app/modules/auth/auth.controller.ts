@@ -32,10 +32,10 @@ const signIn = catchAsync(async (req: Request, res: Response) => {
   const cookieOptions = {
     secure: false,
     httpOnly: true,
-    maxAge: parseInt(config.jwt.cookie_max_age || '2592000'),
+    maxAge: parseInt(config.jwt.cookie_max_age || '31536000000'),
   };
 
-  res.cookie('parkingToken', refreshToken, cookieOptions);
+  res.cookie('payrollToken', refreshToken, cookieOptions);
 
   sendResponse<ILoginUserResponse>(res, {
     success: true,
@@ -47,7 +47,7 @@ const signIn = catchAsync(async (req: Request, res: Response) => {
 
 // logout
 const logout = catchAsync(async (req: Request, res: Response) => {
-  res.clearCookie('parkingToken');
+  res.clearCookie('payrollToken');
 
   sendResponse<string>(res, {
     statusCode: 200,
@@ -58,18 +58,9 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 });
 
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
-  const { parkingToken } = req.cookies;
+  const { payrollToken } = req.cookies;
 
-  const result = await AuthService.refreshToken(parkingToken);
-
-  // set refresh token into cookie
-  const cookieOptions = {
-    secure: false,
-    httpOnly: true,
-    maxAge: parseInt(config.jwt.cookie_max_age || '2592000'),
-  };
-
-  res.cookie('parkingToken', parkingToken, cookieOptions);
+  const result = await AuthService.refreshToken(payrollToken);
 
   sendResponse<IRefreshTokenResponse>(res, {
     statusCode: 200,

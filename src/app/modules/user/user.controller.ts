@@ -19,7 +19,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 
 // get single user
 const getSingleUser = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await UserService.getSingleUser(id);
 
@@ -33,7 +33,7 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
 
 // update single user
 const updateUser = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
   const data = req.body;
 
   const result = await UserService.updateUser(id, data);
@@ -48,7 +48,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 
 // delete user
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await UserService.deleteUser(id);
 

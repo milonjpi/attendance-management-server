@@ -13,7 +13,7 @@ const getAllUsers = async (): Promise<User[]> => {
 };
 
 // get single user
-const getSingleUser = async (id: string): Promise<User | null> => {
+const getSingleUser = async (id: number): Promise<User | null> => {
   const result = await prisma.user.findUnique({
     where: {
       id,
@@ -30,7 +30,7 @@ const getSingleUser = async (id: string): Promise<User | null> => {
 
 // update single user
 const updateUser = async (
-  id: string,
+  id: number,
   payload: Partial<User>
 ): Promise<User | null> => {
   // check is exist
@@ -67,7 +67,7 @@ const updateUser = async (
 };
 
 // delete user
-const deleteUser = async (id: string): Promise<User | null> => {
+const deleteUser = async (id: number): Promise<User | null> => {
   // check is exist
   const isExist = await prisma.user.findUnique({
     where: {

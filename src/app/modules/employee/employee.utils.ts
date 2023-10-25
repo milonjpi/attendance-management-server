@@ -3,16 +3,16 @@ import { MultipleFileUploader } from '../../../helpers/multipleUploader';
 import { IUploadFile } from '../../../interfaces/file';
 import prisma from '../../../shared/prisma';
 
-export const bikerFilesUpload = (
+export const employeeFilesUpload = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const upload = MultipleFileUploader.uploader(
-    'bikers',
+    'employees',
     ['image/jpeg', 'image/jpg', 'image/png'],
     5000000,
-    4,
+    1,
     'Only .jpg, jpeg or .png format allowed!'
   );
 
@@ -34,20 +34,18 @@ export const bikerFilesUpload = (
 };
 
 // generate biker id
-export const generateBikerId = async (): Promise<string> => {
-  const currentId = await prisma.biker.findFirst({
+export const generateEmployeeId = async (): Promise<string> => {
+  const currentId = await prisma.employee.findFirst({
     orderBy: {
       createdAt: 'desc',
     },
     select: {
-      bikerId: true,
+      id: true,
     },
   });
 
   //increment by 1
-  const incrementedId = (
-    parseInt(currentId?.bikerId || '88001000') + 1
-  ).toString();
+  const incrementedId = (parseInt(currentId?.id || '10100000') + 1).toString();
 
   return incrementedId;
 };

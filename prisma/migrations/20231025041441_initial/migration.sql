@@ -72,7 +72,7 @@ CREATE TABLE [dbo].[locations] (
 
 -- CreateTable
 CREATE TABLE [dbo].[employees] (
-    [employeeId] NVARCHAR(1000) NOT NULL,
+    [id] NVARCHAR(1000) NOT NULL,
     [name] NVARCHAR(1000) NOT NULL,
     [designationId] INT NOT NULL,
     [departmentId] INT NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE [dbo].[employees] (
     [photo] NVARCHAR(1000),
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [employees_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
-    CONSTRAINT [employees_pkey] PRIMARY KEY CLUSTERED ([employeeId])
+    CONSTRAINT [employees_pkey] PRIMARY KEY CLUSTERED ([id])
 );
 
 -- CreateTable
@@ -119,10 +119,10 @@ ALTER TABLE [dbo].[employees] ADD CONSTRAINT [employees_departmentId_fkey] FOREI
 ALTER TABLE [dbo].[employees] ADD CONSTRAINT [employees_locationId_fkey] FOREIGN KEY ([locationId]) REFERENCES [dbo].[locations]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE [dbo].[authLogs] ADD CONSTRAINT [authLogs_employeeId_fkey] FOREIGN KEY ([employeeId]) REFERENCES [dbo].[employees]([employeeId]) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE [dbo].[authLogs] ADD CONSTRAINT [authLogs_employeeId_fkey] FOREIGN KEY ([employeeId]) REFERENCES [dbo].[employees]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE [dbo].[attendances] ADD CONSTRAINT [attendances_employeeId_fkey] FOREIGN KEY ([employeeId]) REFERENCES [dbo].[employees]([employeeId]) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE [dbo].[attendances] ADD CONSTRAINT [attendances_employeeId_fkey] FOREIGN KEY ([employeeId]) REFERENCES [dbo].[employees]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 COMMIT TRAN;
 
