@@ -1,6 +1,6 @@
 export type IAttendanceFilters = {
   employeeId?: string;
-  inTime?: string;
-  outTime?: string;
+  startDate?: string;
+  endDate?: string;
   realPunch?: string;
 };

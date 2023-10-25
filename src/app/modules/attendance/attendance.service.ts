@@ -42,7 +42,7 @@ const getAllAttendances = async (
   filters: IAttendanceFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Attendance[]>> => {
-  const { inTime, outTime, ...filterData } = filters;
+  const { startDate, endDate, ...filterData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -52,17 +52,17 @@ const getAllAttendances = async (
     realPunch: false,
   });
 
-  if (inTime) {
+  if (startDate) {
     andConditions.push({
       inTime: {
-        gte: new Date(`${inTime}, 00:00:00`),
+        gte: new Date(`${startDate}, 00:00:00`),
       },
     });
   }
-  if (outTime) {
+  if (endDate) {
     andConditions.push({
       inTime: {
-        lte: new Date(`${outTime}, 23:59:59`),
+        lte: new Date(`${endDate}, 23:59:59`),
       },
     });
   }

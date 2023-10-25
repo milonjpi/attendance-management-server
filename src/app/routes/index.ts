@@ -9,6 +9,7 @@ import { SectionPermissionRoutes } from '../modules/sectionPermission/sectionPer
 import { LocationRoutes } from '../modules/location/location.route';
 import { EmployeeRoutes } from '../modules/employee/employee.route';
 import { AttendanceRoutes } from '../modules/attendance/attendance.route';
+import { ReportRoutes } from '../modules/report/report.route';
 
 const router = express.Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
   {
     path: '/attendance',
     route: AttendanceRoutes,
+  },
+  {
+    path: '/report',
+    route: ReportRoutes,
   },
 ];
 
