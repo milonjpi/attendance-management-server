@@ -87,8 +87,7 @@ model Location {
 }
 
 model Employee {
-  id         Int    @id @default(autoincrement())
-  employeeId String @unique
+  employeeId String @id
   name       String
 
   designationId Int
@@ -112,8 +111,8 @@ model Employee {
 
 model AuthLog {
   id        Int      @id @default(autoincrement())
-  empId     String
-  employee  Employee @relation(fields: [empId], references: [employeeId])
+  employeeId     String
+  employee  Employee @relation(fields: [employeeId], references: [employeeId])
   punchTime DateTime
 
   @@map("authLogs")

@@ -72,7 +72,6 @@ CREATE TABLE [dbo].[locations] (
 
 -- CreateTable
 CREATE TABLE [dbo].[employees] (
-    [id] INT NOT NULL IDENTITY(1,1),
     [employeeId] NVARCHAR(1000) NOT NULL,
     [name] NVARCHAR(1000) NOT NULL,
     [designationId] INT NOT NULL,
@@ -81,8 +80,7 @@ CREATE TABLE [dbo].[employees] (
     [photo] NVARCHAR(1000),
     [createdAt] DATETIME2 NOT NULL CONSTRAINT [employees_createdAt_df] DEFAULT CURRENT_TIMESTAMP,
     [updatedAt] DATETIME2 NOT NULL,
-    CONSTRAINT [employees_pkey] PRIMARY KEY CLUSTERED ([id]),
-    CONSTRAINT [employees_employeeId_key] UNIQUE NONCLUSTERED ([employeeId])
+    CONSTRAINT [employees_pkey] PRIMARY KEY CLUSTERED ([employeeId])
 );
 
 -- CreateTable
