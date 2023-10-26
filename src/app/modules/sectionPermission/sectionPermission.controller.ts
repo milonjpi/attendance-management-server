@@ -21,7 +21,7 @@ const addSection = catchAsync(async (req: Request, res: Response) => {
 
 // remove Section
 const removeSection = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = parseInt(req.params.id);
 
   const result = await SectionPermissionService.removeSection(id);
 

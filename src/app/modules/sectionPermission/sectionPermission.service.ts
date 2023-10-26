@@ -17,7 +17,7 @@ const addSection = async (
 };
 
 // remove section
-const removeSection = async (id: string): Promise<SectionPermission | null> => {
+const removeSection = async (id: number): Promise<SectionPermission | null> => {
   // check is exist
   const isExist = await prisma.sectionPermission.findUnique({
     where: {

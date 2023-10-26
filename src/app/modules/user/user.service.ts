@@ -5,6 +5,22 @@ import { User } from '@prisma/client';
 import ApiError from '../../../errors/ApiError';
 import config from '../../../config';
 
+
+// create user
+const createUser = async (data: User): Promise<User | null> => {
+  data.password = await bcrypt.hash(
+    data.password,
+    Number(config.bcrypt_salt_rounds)
+  );
+  const result = await prisma.user.create({ data });
+
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to Create User');
+  }
+
+  return result;
+};
+
 // get all users
 const getAllUsers = async (): Promise<User[]> => {
   const result = await prisma.user.findMany();
@@ -89,6 +105,7 @@ const deleteUser = async (id: number): Promise<User | null> => {
 };
 
 export const UserService = {
+  createUser,
   getAllUsers,
   getSingleUser,
   updateUser,

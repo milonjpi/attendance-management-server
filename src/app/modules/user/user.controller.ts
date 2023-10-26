@@ -5,6 +5,20 @@ import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
 import { User } from '@prisma/client';
 
+// create user
+const createUser = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body;
+
+  const result = await UserService.createUser(data);
+
+  sendResponse<User>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User Created Successfully',
+    data: result,
+  });
+});
+
 // get all users
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.getAllUsers();
@@ -61,6 +75,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const UserController = {
+  createUser,
   getAllUsers,
   getSingleUser,
   updateUser,

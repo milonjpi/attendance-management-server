@@ -8,20 +8,6 @@ import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { Secret } from 'jsonwebtoken';
 import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
 
-// signup
-const signUp = async (data: User): Promise<User | null> => {
-  data.password = await bcrypt.hash(
-    data.password,
-    Number(config.bcrypt_salt_rounds)
-  );
-  const result = await prisma.user.create({ data });
-
-  if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to Signup');
-  }
-
-  return result;
-};
 
 // signIn
 const signIn = async (
@@ -32,11 +18,6 @@ const signIn = async (
   const isUserExist = await prisma.user.findUnique({
     where: {
       userName,
-    },
-    include: {
-      menus: true,
-      subMenus: true,
-      sections: true,
     },
   });
 
@@ -67,7 +48,6 @@ const signIn = async (
 
   return {
     accessToken,
-    user: isUserExist,
     refreshToken,
   };
 };
@@ -94,11 +74,6 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     where: {
       id,
     },
-    include: {
-      menus: true,
-      subMenus: true,
-      sections: true,
-    },
   });
 
   if (!isUserExist) {
@@ -118,12 +93,10 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
   return {
     accessToken: newAccessToken,
-    user: isUserExist,
   };
 };
 
 export const AuthService = {
-  signUp,
   signIn,
   refreshToken,
 };

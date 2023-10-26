@@ -10,6 +10,7 @@ import { LocationRoutes } from '../modules/location/location.route';
 import { EmployeeRoutes } from '../modules/employee/employee.route';
 import { AttendanceRoutes } from '../modules/attendance/attendance.route';
 import { ReportRoutes } from '../modules/report/report.route';
+import { ProfileRoutes } from '../modules/profile/profile.route';
 
 const router = express.Router();
 
@@ -21,6 +22,10 @@ const moduleRoutes = [
   {
     path: '/user',
     route: UserRoutes,
+  },
+  {
+    path: '/profile',
+    route: ProfileRoutes,
   },
   {
     path: '/menu-permission',
