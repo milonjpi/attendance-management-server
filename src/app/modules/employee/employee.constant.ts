@@ -1,5 +1,4 @@
 export const employeeSearchableFields = [
-  'id',
   'name',
   'officeId',
   'contactNo',

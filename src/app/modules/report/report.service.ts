@@ -22,7 +22,6 @@ const getEmployeesReport = async (
       OR: employeeReportSearchableFields.map(field => ({
         [field]: {
           contains: searchTerm,
-          mode: 'insensitive',
         },
       })),
     });

@@ -45,7 +45,6 @@ const getAllEmployees = async (
       OR: employeeSearchableFields.map(field => ({
         [field]: {
           contains: searchTerm,
-          mode: 'insensitive',
         },
       })),
     });
@@ -54,7 +53,8 @@ const getAllEmployees = async (
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.entries(filterData).map(([field, value]) => ({
-        [field]: value === 'true' ? true : value === 'false' ? false : value,
+        [field]:
+          value === 'true' ? true : value === 'false' ? false : Number(value),
       })),
     });
   }
@@ -69,6 +69,11 @@ const getAllEmployees = async (
     },
     skip,
     take: limit,
+    include: {
+      designation: true,
+      department: true,
+      location: true,
+    },
   });
 
   const total = await prisma.employee.count({
