@@ -24,11 +24,17 @@ router.get(
   EmployeeController.getAllEmployees
 );
 
-// get single Employee
+// get single active Employee
 router.get(
-  '/:id',
+  '/:id/active',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  EmployeeController.getSingleEmployee
+  EmployeeController.getSingleActiveEmployee
+);
+// get single inactive Employee
+router.get(
+  '/:id/inactive',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  EmployeeController.getSingleInactiveEmployee
 );
 
 // update Employee

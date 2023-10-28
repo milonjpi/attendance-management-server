@@ -41,19 +41,37 @@ const getAllEmployees = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// get single Employee
-const getSingleEmployee = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+// get single active Employee
+const getSingleActiveEmployee = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
 
-  const result = await EmployeeService.getSingleEmployee(id);
+    const result = await EmployeeService.getSingleActiveEmployee(id);
 
-  sendResponse<Employee>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Employee retrieved successfully',
-    data: result,
-  });
-});
+    sendResponse<Employee>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Employee retrieved successfully',
+      data: result,
+    });
+  }
+);
+
+// get single inactive Employee
+const getSingleInactiveEmployee = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    const result = await EmployeeService.getSingleInactiveEmployee(id);
+
+    sendResponse<Employee>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Employee retrieved successfully',
+      data: result,
+    });
+  }
+);
 
 // update Employee
 const updateEmployee = catchAsync(async (req: Request, res: Response) => {
@@ -87,7 +105,8 @@ const inActiveEmployee = catchAsync(async (req: Request, res: Response) => {
 export const EmployeeController = {
   createEmployee,
   getAllEmployees,
-  getSingleEmployee,
+  getSingleActiveEmployee,
+  getSingleInactiveEmployee,
   updateEmployee,
   inActiveEmployee,
 };

@@ -93,10 +93,35 @@ const getAllEmployees = async (
 };
 
 // get single Employee
-const getSingleEmployee = async (id: string): Promise<Employee | null> => {
+const getSingleActiveEmployee = async (
+  id: string
+): Promise<Employee | null> => {
   const result = await prisma.employee.findUnique({
     where: {
       id,
+      isActive: true,
+    },
+    include: {
+      designation: true,
+      department: true,
+      location: true,
+    },
+  });
+
+  return result;
+};
+const getSingleInactiveEmployee = async (
+  id: string
+): Promise<Employee | null> => {
+  const result = await prisma.employee.findUnique({
+    where: {
+      id,
+      isActive: false,
+    },
+    include: {
+      designation: true,
+      department: true,
+      location: true,
     },
   });
 
@@ -161,7 +186,8 @@ const inActiveEmployee = async (id: string): Promise<Employee | null> => {
 export const EmployeeService = {
   createEmployee,
   getAllEmployees,
-  getSingleEmployee,
+  getSingleActiveEmployee,
+  getSingleInactiveEmployee,
   updateEmployee,
   inActiveEmployee,
 };
