@@ -68,6 +68,9 @@ const getEmployeesReport = async (
     skip,
     take: limit,
     include: {
+      designation: true,
+      department: true,
+      location: true,
       attendances: {
         where: attendanceWhereCondition,
       },
