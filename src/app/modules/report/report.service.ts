@@ -30,7 +30,8 @@ const getEmployeesReport = async (
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.entries(filterData).map(([field, value]) => ({
-        [field]: value === 'true' ? true : value === 'false' ? false : value,
+        [field]:
+          value === 'true' ? true : value === 'false' ? false : Number(value),
       })),
     });
   }

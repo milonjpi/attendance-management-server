@@ -85,6 +85,15 @@ const getAllAttendances = async (
     },
     skip,
     take: limit,
+    include: {
+      employee: {
+        include: {
+          designation: true,
+          department: true,
+          location: true,
+        },
+      },
+    },
   });
 
   const total = await prisma.attendance.count({
