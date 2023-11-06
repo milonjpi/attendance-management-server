@@ -8,6 +8,7 @@
 
 
 ### Technology:
+- TypeScript
 - Express JS
 - Prisma
 - MS SQL
