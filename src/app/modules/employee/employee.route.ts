@@ -11,7 +11,7 @@ const router = express.Router();
 // create Employee
 router.post(
   '/create',
-  //   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   employeeFilesUpload,
   validateRequest(EmployeeValidation.create),
   EmployeeController.createEmployee
@@ -20,21 +20,15 @@ router.post(
 // get all Employees
 router.get(
   '/',
-  //   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   EmployeeController.getAllEmployees
 );
 
 // get single active Employee
 router.get(
-  '/:id/active',
+  '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  EmployeeController.getSingleActiveEmployee
-);
-// get single inactive Employee
-router.get(
-  '/:id/inactive',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  EmployeeController.getSingleInactiveEmployee
+  EmployeeController.getSingleEmployee
 );
 
 // update Employee
@@ -46,11 +40,5 @@ router.patch(
   EmployeeController.updateEmployee
 );
 
-// inactive Employee
-router.patch(
-  '/:id/inactive',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  EmployeeController.inActiveEmployee
-);
 
 export const EmployeeRoutes = router;

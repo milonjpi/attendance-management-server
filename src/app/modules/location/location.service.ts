@@ -27,7 +27,7 @@ const getLocations = async (): Promise<Location[]> => {
 
 // get single Location
 const getSingleLocation = async (id: number): Promise<Location | null> => {
-  const result = await prisma.location.findUnique({
+  const result = await prisma.location.findFirst({
     where: {
       id,
     },
@@ -42,7 +42,7 @@ const updateLocation = async (
   payload: Partial<Location>
 ): Promise<Location | null> => {
   // check is exist
-  const isExist = await prisma.location.findUnique({
+  const isExist = await prisma.location.findFirst({
     where: {
       id,
     },
@@ -69,7 +69,7 @@ const updateLocation = async (
 // delete Location
 const deleteLocation = async (id: number): Promise<Location | null> => {
   // check is exist
-  const isExist = await prisma.location.findUnique({
+  const isExist = await prisma.location.findFirst({
     where: {
       id,
     },

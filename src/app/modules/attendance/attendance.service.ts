@@ -16,7 +16,7 @@ const createAttendance = async (
 
   const isExist = await prisma.attendance.findFirst({
     where: {
-      employeeId: data?.employeeId,
+      officeId: data?.officeId,
       inTime: {
         gte: new Date(`${moment(data?.inTime).format('YYYY-MM-DD')}, 00:00:00`),
         lte: new Date(`${moment(data?.inTime).format('YYYY-MM-DD')}, 23:59:59`),
@@ -115,7 +115,7 @@ const getAllAttendances = async (
 // delete Attendance
 const deleteAttendance = async (id: number): Promise<Attendance | null> => {
   // check is exist
-  const isExist = await prisma.attendance.findUnique({
+  const isExist = await prisma.attendance.findFirst({
     where: {
       id,
       realPunch: false,

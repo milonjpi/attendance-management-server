@@ -41,41 +41,23 @@ const getAllEmployees = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// get single active Employee
-const getSingleActiveEmployee = catchAsync(
-  async (req: Request, res: Response) => {
-    const id = req.params.id;
+// get single Employee
+const getSingleEmployee = catchAsync(async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
 
-    const result = await EmployeeService.getSingleActiveEmployee(id);
+  const result = await EmployeeService.getSingleEmployee(id);
 
-    sendResponse<Employee>(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Employee retrieved successfully',
-      data: result,
-    });
-  }
-);
-
-// get single inactive Employee
-const getSingleInactiveEmployee = catchAsync(
-  async (req: Request, res: Response) => {
-    const id = req.params.id;
-
-    const result = await EmployeeService.getSingleInactiveEmployee(id);
-
-    sendResponse<Employee>(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Employee retrieved successfully',
-      data: result,
-    });
-  }
-);
+  sendResponse<Employee>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Employee retrieved successfully',
+    data: result,
+  });
+});
 
 // update Employee
 const updateEmployee = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
   const data = req.body;
 
   const result = await EmployeeService.updateEmployee(id, data);
@@ -88,25 +70,10 @@ const updateEmployee = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// inActiveEmployee Employee
-const inActiveEmployee = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
-
-  const result = await EmployeeService.inActiveEmployee(id);
-
-  sendResponse<Employee>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Employee Inactive successfully',
-    data: result,
-  });
-});
 
 export const EmployeeController = {
   createEmployee,
   getAllEmployees,
-  getSingleActiveEmployee,
-  getSingleInactiveEmployee,
+  getSingleEmployee,
   updateEmployee,
-  inActiveEmployee,
 };

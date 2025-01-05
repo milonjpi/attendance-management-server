@@ -30,7 +30,7 @@ const getAllUsers = async (): Promise<User[]> => {
 
 // get single user
 const getSingleUser = async (id: number): Promise<User | null> => {
-  const result = await prisma.user.findUnique({
+  const result = await prisma.user.findFirst({
     where: {
       id,
     },
@@ -50,7 +50,7 @@ const updateUser = async (
   payload: Partial<User>
 ): Promise<User | null> => {
   // check is exist
-  const isExist = await prisma.user.findUnique({
+  const isExist = await prisma.user.findFirst({
     where: {
       id,
     },
@@ -85,7 +85,7 @@ const updateUser = async (
 // delete user
 const deleteUser = async (id: number): Promise<User | null> => {
   // check is exist
-  const isExist = await prisma.user.findUnique({
+  const isExist = await prisma.user.findFirst({
     where: {
       id,
     },

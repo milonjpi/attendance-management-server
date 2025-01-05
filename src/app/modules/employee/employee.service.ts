@@ -5,7 +5,6 @@ import ApiError from '../../../errors/ApiError';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { generateEmployeeId } from './employee.utils';
 import { IEmployeeFilters } from './employee.interface';
 import { employeeSearchableFields } from './employee.constant';
 import path from 'path';
@@ -13,10 +12,6 @@ import { unlinkSync } from 'fs';
 
 // create Employee
 const createEmployee = async (data: Employee): Promise<Employee | null> => {
-  // generate Employee id
-  const newEmployeeId = await generateEmployeeId();
-  data.id = newEmployeeId;
-
   const result = await prisma.employee.create({ data });
 
   if (!result) {
@@ -93,30 +88,10 @@ const getAllEmployees = async (
 };
 
 // get single Employee
-const getSingleActiveEmployee = async (
-  id: string
-): Promise<Employee | null> => {
-  const result = await prisma.employee.findUnique({
+const getSingleEmployee = async (id: number): Promise<Employee | null> => {
+  const result = await prisma.employee.findFirst({
     where: {
       id,
-      isActive: true,
-    },
-    include: {
-      designation: true,
-      department: true,
-      location: true,
-    },
-  });
-
-  return result;
-};
-const getSingleInactiveEmployee = async (
-  id: string
-): Promise<Employee | null> => {
-  const result = await prisma.employee.findUnique({
-    where: {
-      id,
-      isActive: false,
     },
     include: {
       designation: true,
@@ -130,11 +105,11 @@ const getSingleInactiveEmployee = async (
 
 // update Employee
 const updateEmployee = async (
-  id: string,
+  id: number,
   data: Partial<Employee>
 ): Promise<Employee | null> => {
   // check is exist
-  const isExist = await prisma.employee.findUnique({
+  const isExist = await prisma.employee.findFirst({
     where: {
       id,
     },
@@ -160,34 +135,9 @@ const updateEmployee = async (
   return result;
 };
 
-// inActive Employee
-const inActiveEmployee = async (id: string): Promise<Employee | null> => {
-  // check is exist
-  const isExist = await prisma.employee.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Employee Not Found');
-  }
-
-  const result = await prisma.employee.update({
-    where: {
-      id,
-    },
-    data: { isActive: false },
-  });
-
-  return result;
-};
-
 export const EmployeeService = {
   createEmployee,
   getAllEmployees,
-  getSingleActiveEmployee,
-  getSingleInactiveEmployee,
+  getSingleEmployee,
   updateEmployee,
-  inActiveEmployee,
 };

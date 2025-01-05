@@ -10,7 +10,7 @@ const router = express.Router();
 // create Attendance
 router.post(
   '/create',
-  //   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   validateRequest(AttendanceValidation.create),
   AttendanceController.createAttendance
 );
@@ -18,7 +18,7 @@ router.post(
 // get all Attendances
 router.get(
   '/',
-  //   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   AttendanceController.getAllAttendances
 );
 

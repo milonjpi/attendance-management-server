@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { MultipleFileUploader } from '../../../helpers/multipleUploader';
 import { IUploadFile } from '../../../interfaces/file';
-import prisma from '../../../shared/prisma';
 
 export const employeeFilesUpload = (
   req: Request,
@@ -31,21 +30,4 @@ export const employeeFilesUpload = (
       next();
     }
   });
-};
-
-// generate biker id
-export const generateEmployeeId = async (): Promise<string> => {
-  const currentId = await prisma.employee.findFirst({
-    orderBy: {
-      createdAt: 'desc',
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  //increment by 1
-  const incrementedId = (parseInt(currentId?.id || '10100000') + 1).toString();
-
-  return incrementedId;
 };

@@ -1,5 +1,5 @@
 export const attendanceFilterableFields = [
-  'employeeId',
+  'officeId',
   'startDate',
   'endDate',
   'realPunch',

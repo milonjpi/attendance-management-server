@@ -7,7 +7,7 @@ const config = {
     encrypt: false,
     trustedconnection: true,
     enableArithAbort: true,
-    instancename: 'SQLEXPRESS',
+    instancename: 'MSSQLSERVER',
   },
 
   port: 1433,
