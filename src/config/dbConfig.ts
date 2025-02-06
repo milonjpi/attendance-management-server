@@ -1,7 +1,7 @@
 const config = {
   user: 'sa',
   password: 'Testbat1#',
-  server: '172.25.8.200',
+  server: '192.168.1.24',
   database: 'NitgenAccessManager',
   options: {
     encrypt: false,
