@@ -26,7 +26,7 @@ const getEmployeesReport = async (
         },
       })),
     });
-  }
+  }                                                                                                                                                                                                                                                                                                                                 
 
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
