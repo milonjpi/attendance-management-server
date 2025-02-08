@@ -18,8 +18,8 @@ const createAttendance = async (
     where: {
       officeId: data?.officeId,
       date: {
-        gte: moment(data.date).startOf('day').toDate(),
-        lte: moment(data.date).endOf('day').toDate(),
+        gte: moment.utc(data.date).startOf('day').toDate(),
+        lte: moment.utc(data.date).endOf('day').toDate(),
       },
     },
   });

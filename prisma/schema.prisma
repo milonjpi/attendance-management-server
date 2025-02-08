@@ -130,7 +130,7 @@ model Attendance {
   officeId  String
   employee  Employee  @relation(fields: [officeId], references: [officeId])
   date      DateTime  @default(now())
-  inTime    DateTime
+  inTime    DateTime?
   outTime   DateTime?
   realPunch Boolean   @default(true)
 
