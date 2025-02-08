@@ -17,9 +17,9 @@ const createAttendance = async (
   const isExist = await prisma.attendance.findFirst({
     where: {
       officeId: data?.officeId,
-      inTime: {
-        gte: new Date(`${moment(data?.inTime).format('YYYY-MM-DD')}, 00:00:00`),
-        lte: new Date(`${moment(data?.inTime).format('YYYY-MM-DD')}, 23:59:59`),
+      date: {
+        gte: moment(data.date).startOf('day').toDate(),
+        lte: moment(data.date).endOf('day').toDate(),
       },
     },
   });
@@ -54,15 +54,15 @@ const getAllAttendances = async (
 
   if (startDate) {
     andConditions.push({
-      inTime: {
-        gte: new Date(`${startDate}, 00:00:00`),
+      date: {
+        gte: moment.utc(`${startDate}T00:00:00Z`).toDate(),
       },
     });
   }
   if (endDate) {
     andConditions.push({
-      inTime: {
-        lte: new Date(`${endDate}, 23:59:59`),
+      date: {
+        lte: moment.utc(`${endDate}T23:59:59Z`).toDate(),
       },
     });
   }

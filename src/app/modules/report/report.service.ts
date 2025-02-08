@@ -5,6 +5,7 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IEmployeeReportFilters } from './report.interface';
 import { employeeReportSearchableFields } from './report.constant';
+import moment from 'moment';
 
 // get Employees Report
 const getEmployeesReport = async (
@@ -44,16 +45,16 @@ const getEmployeesReport = async (
 
   if (startDate) {
     attendanceConditions.push({
-      inTime: {
-        gte: new Date(`${startDate}, 00:00:00`),
+      date: {
+        gte: moment.utc(`${startDate}T00:00:00Z`).toDate(),
       },
     });
   }
 
   if (endDate) {
     attendanceConditions.push({
-      inTime: {
-        lte: new Date(`${endDate}, 23:59:59`),
+      date: {
+        lte: moment.utc(`${endDate}T23:59:59Z`).toDate(),
       },
     });
   }
