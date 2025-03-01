@@ -17,9 +17,12 @@ const signIn = catchAsync(async (req: Request, res: Response) => {
   const cookieOptions = {
     secure: false,
     httpOnly: true,
+    sameSite: 'none',
     maxAge: parseInt(config.jwt.cookie_max_age || '31536000000'),
   };
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
   res.cookie('payrollToken', refreshToken, cookieOptions);
 
   sendResponse<ILoginUserResponse>(res, {
