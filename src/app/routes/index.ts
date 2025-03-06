@@ -12,6 +12,7 @@ import { AttendanceRoutes } from '../modules/attendance/attendance.route';
 import { ReportRoutes } from '../modules/report/report.route';
 import { ProfileRoutes } from '../modules/profile/profile.route';
 import { DeviceRoutes } from '../modules/device/device.route';
+import { LeaveRoutes } from '../modules/leave/leave.route';
 
 const router = express.Router();
 
@@ -59,6 +60,10 @@ const moduleRoutes = [
   {
     path: '/attendance',
     route: AttendanceRoutes,
+  },
+  {
+    path: '/leave',
+    route: LeaveRoutes,
   },
   {
     path: '/device',
