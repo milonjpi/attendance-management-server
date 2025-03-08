@@ -67,9 +67,24 @@ const updateLeave = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// delete leave
+const deleteLeave = catchAsync(async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+
+  const result = await LeaveService.deleteLeave(id);
+
+  sendResponse<Leave>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Leave deleted successfully',
+    data: result,
+  });
+});
+
 export const LeaveController = {
   createLeave,
   getAllLeaves,
   getSingleLeave,
   updateLeave,
+  deleteLeave,
 };

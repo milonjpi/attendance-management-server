@@ -50,7 +50,7 @@ const getAllLeaves = async (
 
   if (endDate) {
     andConditions.push({
-      toDate: {
+      fromDate: {
         lte: new Date(`${endDate}, 23:59:59`),
       },
     });
@@ -59,8 +59,7 @@ const getAllLeaves = async (
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.entries(filterData).map(([field, value]) => ({
-        [field]:
-          value === 'true' ? true : value === 'false' ? false : Number(value),
+        [field]: value === 'true' ? true : value === 'false' ? false : value,
       })),
     });
   }
@@ -76,7 +75,13 @@ const getAllLeaves = async (
     skip,
     take: limit,
     include: {
-      employee: true,
+      employee: {
+        include: {
+          designation: true,
+          department: true,
+          location: true,
+        },
+      },
     },
   });
 
@@ -103,7 +108,13 @@ const getSingleLeave = async (id: number): Promise<Leave | null> => {
       id,
     },
     include: {
-      employee: true,
+      employee: {
+        include: {
+          designation: true,
+          department: true,
+          location: true,
+        },
+      },
     },
   });
 
@@ -136,9 +147,32 @@ const updateLeave = async (
   return result;
 };
 
+// delete leave
+const deleteLeave = async (id: number): Promise<Leave | null> => {
+  // check is exist
+  const isExist = await prisma.leave.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Leave Not Found');
+  }
+
+  const result = await prisma.leave.delete({
+    where: {
+      id,
+    },
+  });
+
+  return result;
+};
+
 export const LeaveService = {
   createLeave,
   getAllLeaves,
   getSingleLeave,
   updateLeave,
+  deleteLeave,
 };

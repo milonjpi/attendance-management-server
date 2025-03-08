@@ -76,6 +76,7 @@ const getEmployeesReport = async (
       attendances: {
         where: attendanceWhereCondition,
       },
+      leaves: true,
     },
   });
 
