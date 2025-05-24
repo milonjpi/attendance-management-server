@@ -2,46 +2,46 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import auth from '../../middlewares/auth';
 import { ENUM_USER_ROLE } from '../../../enums/user';
-import { LocationValidation } from './location.validation';
-import { LocationController } from './location.controller';
+import { AreaValidation } from './area.validation';
+import { AreaController } from './area.controller';
 
 const router = express.Router();
 
-// create Location
+// create Area
 router.post(
   '/create',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(LocationValidation.create),
-  LocationController.createLocation
+  validateRequest(AreaValidation.create),
+  AreaController.createArea
 );
 
-// get all Location
+// get all Areas
 router.get(
   '/',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  LocationController.getLocations
+  AreaController.getAllAreas
 );
 
-// get single Location
+// get single active Area
 router.get(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  LocationController.getSingleLocation
+  AreaController.getSingleArea
 );
 
-// update single Location
+// update Area
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(LocationValidation.update),
-  LocationController.updateLocation
+  validateRequest(AreaValidation.update),
+  AreaController.updateArea
 );
 
-// delete single Location
+// delete Area
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  LocationController.deleteLocation
+  AreaController.deleteArea
 );
 
-export const LocationRoutes = router;
+export const AreaRoutes = router;

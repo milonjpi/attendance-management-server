@@ -75,13 +75,28 @@ model Department {
   @@map("departments")
 }
 
-model Location {
+model Area {
   id    Int    @id @default(autoincrement())
   label String @unique
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  employees Employee[]
+  locations Location[]
+
+  @@map("areas")
+}
+
+model Location {
+  id     Int    @id @default(autoincrement())
+  label  String @unique
+  areaId Int?
+  area   Area?  @relation(fields: [areaId], references: [id])
+
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  employees     Employee[]
+  fromTransfers Transfer[] @relation("FromLocationName")
+  toTransfers   Transfer[] @relation("ToLocationName")
 
   @@map("locations")
 }
@@ -107,12 +122,15 @@ model Employee {
 
   photo    String?
   isActive Boolean @default(true)
+  isOwn    Boolean @default(false)
 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   authLogs    AuthLog[]
   attendances Attendance[]
   leaves      Leave[]
+  salaries    Salary[]
+  transfers   Transfer[]
 
   @@map("employees")
 }
@@ -151,4 +169,37 @@ model Leave {
   updatedAt DateTime @updatedAt
 
   @@map("leaves")
+}
+
+model Salary {
+  id       Int       @id @default(autoincrement())
+  officeId String
+  employee Employee  @relation(fields: [officeId], references: [officeId])
+  fromDate DateTime
+  toDate   DateTime?
+  salary   Int       @default(0)
+  remarks  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("salaries")
+}
+
+model Transfer {
+  id             Int      @id @default(autoincrement())
+  officeId       String
+  employee       Employee @relation(fields: [officeId], references: [officeId], onDelete: NoAction, onUpdate: NoAction)
+  date           DateTime
+  fromLocationId Int
+  fromLocation   Location @relation(fields: [fromLocationId], references: [id], name: "FromLocationName", onDelete: NoAction, onUpdate: NoAction)
+  toLocationId   Int
+  toLocation     Location @relation(fields: [toLocationId], references: [id], name: "ToLocationName")
+  remarks        String?
+  isApproved     Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("transfers")
 }

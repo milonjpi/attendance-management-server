@@ -2,46 +2,46 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import auth from '../../middlewares/auth';
 import { ENUM_USER_ROLE } from '../../../enums/user';
-import { LocationValidation } from './location.validation';
-import { LocationController } from './location.controller';
+import { SalaryValidation } from './salary.validation';
+import { SalaryController } from './salary.controller';
 
 const router = express.Router();
 
-// create Location
+// create
 router.post(
   '/create',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(LocationValidation.create),
-  LocationController.createLocation
+  validateRequest(SalaryValidation.create),
+  SalaryController.insertIntoDB
 );
 
-// get all Location
+// get all
 router.get(
   '/',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  LocationController.getLocations
+  SalaryController.getAll
 );
 
-// get single Location
+// get single
 router.get(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  LocationController.getSingleLocation
+  SalaryController.getSingle
 );
 
-// update single Location
+// update
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(LocationValidation.update),
-  LocationController.updateLocation
+  validateRequest(SalaryValidation.update),
+  SalaryController.updateSingle
 );
 
-// delete single Location
+// delete
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  LocationController.deleteLocation
+  SalaryController.deleteFromDB
 );
 
-export const LocationRoutes = router;
+export const SalaryRoutes = router;

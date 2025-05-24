@@ -3,5 +3,7 @@ export type IEmployeeFilters = {
   designationId?: string;
   departmentId?: string;
   locationId?: string;
+  areaId?: string;
   isActive?: string;
+  isOwn?: string;
 };

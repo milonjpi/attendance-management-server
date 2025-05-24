@@ -2,46 +2,53 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import auth from '../../middlewares/auth';
 import { ENUM_USER_ROLE } from '../../../enums/user';
-import { LocationValidation } from './location.validation';
-import { LocationController } from './location.controller';
+import { TransferValidation } from './transfer.validation';
+import { TransferController } from './transfer.controller';
 
 const router = express.Router();
 
-// create Location
+// create
 router.post(
   '/create',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(LocationValidation.create),
-  LocationController.createLocation
+  validateRequest(TransferValidation.create),
+  TransferController.insertIntoDB
 );
 
-// get all Location
+// get all
 router.get(
   '/',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  LocationController.getLocations
+  TransferController.getAll
 );
 
-// get single Location
+// get single
 router.get(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  LocationController.getSingleLocation
+  TransferController.getSingle
 );
 
-// update single Location
+// update
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(LocationValidation.update),
-  LocationController.updateLocation
+  validateRequest(TransferValidation.update),
+  TransferController.updateSingle
 );
 
-// delete single Location
+// approve
+router.patch(
+  '/:id/approve',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  TransferController.approveSingle
+);
+
+// delete
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  LocationController.deleteLocation
+  TransferController.deleteFromDB
 );
 
-export const LocationRoutes = router;
+export const TransferRoutes = router;

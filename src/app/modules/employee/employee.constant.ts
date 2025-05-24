@@ -10,5 +10,7 @@ export const employeeFilterableFields = [
   'designationId',
   'departmentId',
   'locationId',
+  'areaId',
   'isActive',
+  'isOwn',
 ];

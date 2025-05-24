@@ -13,6 +13,9 @@ import { ReportRoutes } from '../modules/report/report.route';
 import { ProfileRoutes } from '../modules/profile/profile.route';
 import { DeviceRoutes } from '../modules/device/device.route';
 import { LeaveRoutes } from '../modules/leave/leave.route';
+import { AreaRoutes } from '../modules/area/area.route';
+import { SalaryRoutes } from '../modules/salary/salary.route';
+import { TransferRoutes } from '../modules/transfer/transfer.route';
 
 const router = express.Router();
 
@@ -50,6 +53,10 @@ const moduleRoutes = [
     route: DepartmentRoutes,
   },
   {
+    path: '/area',
+    route: AreaRoutes,
+  },
+  {
     path: '/location',
     route: LocationRoutes,
   },
@@ -64,6 +71,14 @@ const moduleRoutes = [
   {
     path: '/leave',
     route: LeaveRoutes,
+  },
+  {
+    path: '/salary',
+    route: SalaryRoutes,
+  },
+  {
+    path: '/transfer',
+    route: TransferRoutes,
   },
   {
     path: '/device',

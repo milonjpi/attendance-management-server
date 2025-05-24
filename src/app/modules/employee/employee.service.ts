@@ -29,7 +29,7 @@ const getAllEmployees = async (
   filters: IEmployeeFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Employee[]>> => {
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, areaId, ...filterData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -54,6 +54,12 @@ const getAllEmployees = async (
     });
   }
 
+  if (areaId) {
+    andConditions.push({
+      location: { areaId: Number(areaId) },
+    });
+  }
+
   const whereConditions: Prisma.EmployeeWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
@@ -67,7 +73,11 @@ const getAllEmployees = async (
     include: {
       designation: true,
       department: true,
-      location: true,
+      location: {
+        include: {
+          area: true,
+        },
+      },
     },
   });
 
@@ -96,7 +106,11 @@ const getSingleEmployee = async (id: number): Promise<Employee | null> => {
     include: {
       designation: true,
       department: true,
-      location: true,
+      location: {
+        include: {
+          area: true,
+        },
+      },
     },
   });
 
