@@ -17,7 +17,7 @@ const createLocation = catchAsync(async (req: Request, res: Response) => {
   sendResponse<Location>(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Location Created Successfully',
+    message: 'Branch Created Successfully',
     data: result,
   });
 });
@@ -32,7 +32,7 @@ const getLocations = catchAsync(async (req: Request, res: Response) => {
   sendResponse<Location[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Locations retrieved successfully',
+    message: 'Branches retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
@@ -47,7 +47,7 @@ const getSingleLocation = catchAsync(async (req: Request, res: Response) => {
   sendResponse<Location>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Location retrieved successfully',
+    message: 'Branch retrieved successfully',
     data: result,
   });
 });
@@ -62,7 +62,7 @@ const updateLocation = catchAsync(async (req: Request, res: Response) => {
   sendResponse<Location>(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Location Updated Successfully',
+    message: 'Branch Updated Successfully',
     data: result,
   });
 });
@@ -76,7 +76,7 @@ const deleteLocation = catchAsync(async (req: Request, res: Response) => {
   sendResponse<Location>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Location deleted successfully',
+    message: 'Branch deleted successfully',
     data: result,
   });
 });

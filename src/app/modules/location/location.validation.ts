@@ -2,15 +2,17 @@ import { z } from 'zod';
 
 const create = z.object({
   body: z.object({
-    label: z.string({ required_error: 'Location is Required' }),
-    areaId: z.string({ required_error: 'Area ID is Required' }),
+    label: z.string({ required_error: 'Branch is Required' }),
+    areaId: z.number({ required_error: 'Area ID is Required' }),
+    Address: z.string({ required_error: 'Address is Required' }),
   }),
 });
 
 const update = z.object({
   body: z.object({
     label: z.string().optional(),
-    areaId: z.string().optional(),
+    areaId: z.number().optional(),
+    address: z.string().optional(),
   }),
 });
 

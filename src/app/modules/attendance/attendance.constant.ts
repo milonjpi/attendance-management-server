@@ -3,4 +3,5 @@ export const attendanceFilterableFields = [
   'startDate',
   'endDate',
   'realPunch',
+  'locationId',
 ];

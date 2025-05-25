@@ -3,4 +3,5 @@ export type ILeaveFilters = {
   officeId?: string;
   startDate?: string;
   endDate?: string;
+  locationId?: string;
 };

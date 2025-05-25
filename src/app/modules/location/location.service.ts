@@ -13,7 +13,7 @@ const createLocation = async (data: Location): Promise<Location | null> => {
   const result = await prisma.location.create({ data });
 
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create Location');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create Branch');
   }
 
   return result;
@@ -54,9 +54,14 @@ const getLocations = async (
 
   const result = await prisma.location.findMany({
     where: whereConditions,
-    orderBy: {
-      [sortBy]: sortOrder,
-    },
+    orderBy: [
+      {
+        area: { label: 'asc' },
+      },
+      {
+        [sortBy]: sortOrder,
+      },
+    ],
     skip,
     take: limit,
     include: {
@@ -105,7 +110,7 @@ const updateLocation = async (
   });
 
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Location Not Found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Branch Not Found');
   }
 
   const result = await prisma.location.update({
@@ -116,7 +121,7 @@ const updateLocation = async (
   });
 
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to Update Location');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to Update Branch');
   }
 
   return result;
@@ -135,13 +140,13 @@ const deleteLocation = async (id: number): Promise<Location | null> => {
   });
 
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Location Not Found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Branch Not Found');
   }
 
   if (isExist.employees.length) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      `Location Engaged with ${isExist.employees.length} Docs`
+      `Branch Engaged with ${isExist.employees.length} Docs`
     );
   }
 

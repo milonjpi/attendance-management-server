@@ -6,4 +6,5 @@ export type IEmployeeReportFilters = {
   startDate?: string;
   endDate?: string;
   isActive?: string;
+  isOwn?: string;
 };

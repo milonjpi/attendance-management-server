@@ -14,4 +14,5 @@ export const employeeReportFilterableFields = [
   'startDate',
   'endDate',
   'isActive',
+  'isOwn',
 ];

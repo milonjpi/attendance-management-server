@@ -72,7 +72,11 @@ const getEmployeesReport = async (
     include: {
       designation: true,
       department: true,
-      location: true,
+      location: {
+        include: {
+          area: true,
+        },
+      },
       attendances: {
         where: attendanceWhereCondition,
       },

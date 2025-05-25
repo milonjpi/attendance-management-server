@@ -5,4 +5,5 @@ export const leaveFilterableFields = [
   'officeId',
   'startDate',
   'endDate',
+  'locationId',
 ];

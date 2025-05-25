@@ -42,7 +42,7 @@ const getAllAttendances = async (
   filters: IAttendanceFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Attendance[]>> => {
-  const { startDate, endDate, ...filterData } = filters;
+  const { startDate, endDate, locationId, ...filterData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -64,6 +64,12 @@ const getAllAttendances = async (
       date: {
         lte: moment.utc(`${endDate}T23:59:59Z`).toDate(),
       },
+    });
+  }
+
+  if (locationId) {
+    andConditions.push({
+      employee: { locationId: Number(locationId) },
     });
   }
 
@@ -90,7 +96,11 @@ const getAllAttendances = async (
         include: {
           designation: true,
           department: true,
-          location: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
         },
       },
     },

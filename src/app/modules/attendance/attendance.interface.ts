@@ -3,4 +3,5 @@ export type IAttendanceFilters = {
   startDate?: string;
   endDate?: string;
   realPunch?: string;
+  locationId?: string;
 };

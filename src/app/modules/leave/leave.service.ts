@@ -24,7 +24,7 @@ const getAllLeaves = async (
   filters: ILeaveFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Leave[]>> => {
-  const { searchTerm, startDate, endDate, ...filterData } = filters;
+  const { searchTerm, startDate, endDate, locationId, ...filterData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -56,6 +56,12 @@ const getAllLeaves = async (
     });
   }
 
+  if (locationId) {
+    andConditions.push({
+      employee: { locationId: Number(locationId) },
+    });
+  }
+
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.entries(filterData).map(([field, value]) => ({
@@ -79,7 +85,11 @@ const getAllLeaves = async (
         include: {
           designation: true,
           department: true,
-          location: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
         },
       },
     },
@@ -112,7 +122,11 @@ const getSingleLeave = async (id: number): Promise<Leave | null> => {
         include: {
           designation: true,
           department: true,
-          location: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
         },
       },
     },
