@@ -8,6 +8,7 @@ export const employeeReportSearchableFields = [
 
 export const employeeReportFilterableFields = [
   'searchTerm',
+  'employeeId',
   'designationId',
   'departmentId',
   'locationId',

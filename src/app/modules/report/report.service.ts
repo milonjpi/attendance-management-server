@@ -12,7 +12,7 @@ const getEmployeesReport = async (
   filters: IEmployeeReportFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Employee[]>> => {
-  const { searchTerm, startDate, endDate, ...filterData } = filters;
+  const { searchTerm, startDate, endDate, employeeId, ...filterData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -26,7 +26,13 @@ const getEmployeesReport = async (
         },
       })),
     });
-  }                                                                                                                                                                                                                                                                                                                                 
+  }
+
+  if (employeeId) {
+    andConditions.push({
+      id: Number(employeeId),
+    });
+  }
 
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
@@ -79,6 +85,9 @@ const getEmployeesReport = async (
       },
       attendances: {
         where: attendanceWhereCondition,
+        orderBy: {
+          date: 'asc',
+        },
       },
       leaves: true,
     },

@@ -1,5 +1,6 @@
 export type IEmployeeReportFilters = {
   searchTerm?: string;
+  employeeId?: string;
   designationId?: string;
   departmentId?: string;
   locationId?: string;
