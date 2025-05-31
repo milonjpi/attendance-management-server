@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { leaveStatus } from './leave.constant';
 
 const create = z.object({
   body: z.object({
@@ -7,6 +8,7 @@ const create = z.object({
     toDate: z.string({ required_error: 'To Date is Required' }),
     days: z.number({ required_error: 'Days is Required' }),
     remarks: z.string().optional().nullable(),
+    status: z.enum(leaveStatus as [string, ...string[]]).optional(),
   }),
 });
 
@@ -17,6 +19,7 @@ const update = z.object({
     toDate: z.string().optional(),
     days: z.number().optional(),
     remarks: z.string().optional().nullable(),
+    status: z.enum(leaveStatus as [string, ...string[]]).optional(),
   }),
 });
 

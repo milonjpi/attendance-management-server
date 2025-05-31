@@ -1,3 +1,4 @@
+export const leaveStatus = ['Pending', 'Approved', 'Rejected'];
 export const leaveSearchableFields = ['remarks'];
 
 export const leaveFilterableFields = [
@@ -6,4 +7,5 @@ export const leaveFilterableFields = [
   'startDate',
   'endDate',
   'locationId',
+  'status',
 ];

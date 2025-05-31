@@ -151,6 +151,14 @@ const updateLeave = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Leave Not Found');
   }
 
+  if (isExist.status === 'Approved') {
+    throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Approved');
+  }
+
+  if (isExist.status === 'Rejected') {
+    throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Rejected');
+  }
+
   const result = await prisma.leave.update({
     where: {
       id,
@@ -172,6 +180,14 @@ const deleteLeave = async (id: number): Promise<Leave | null> => {
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Leave Not Found');
+  }
+
+  if (isExist.status === 'Approved') {
+    throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Approved');
+  }
+
+  if (isExist.status === 'Rejected') {
+    throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Rejected');
   }
 
   const result = await prisma.leave.delete({

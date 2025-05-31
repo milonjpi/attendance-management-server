@@ -4,7 +4,7 @@ const create = z.object({
   body: z.object({
     label: z.string({ required_error: 'Branch is Required' }),
     areaId: z.number({ required_error: 'Area ID is Required' }),
-    Address: z.string({ required_error: 'Address is Required' }),
+    address: z.string({ required_error: 'Address is Required' }),
   }),
 });
 

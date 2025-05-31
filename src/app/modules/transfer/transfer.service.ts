@@ -71,6 +71,8 @@ const getAll = async (
           },
         },
       },
+      fromLocation: { include: { area: true } },
+      toLocation: { include: { area: true } },
     },
   });
 
@@ -108,6 +110,8 @@ const getSingle = async (id: number): Promise<Transfer | null> => {
           },
         },
       },
+      fromLocation: { include: { area: true } },
+      toLocation: { include: { area: true } },
     },
   });
 
@@ -147,10 +151,24 @@ const approveSingle = async (id: number): Promise<Transfer | null> => {
     where: {
       id,
     },
+    include: {
+      employee: true,
+    },
   });
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Transfer Not Found');
+  }
+
+  if (isExist.employee?.locationId !== isExist.fromLocationId) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      '!!Forbidden, Miss Match Location'
+    );
+  }
+
+  if (isExist.isApproved) {
+    throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Approved');
   }
 
   const result = await prisma.$transaction(async trans => {
@@ -179,6 +197,10 @@ const deleteFromDB = async (id: number): Promise<Transfer | null> => {
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Transfer Not Found');
+  }
+
+  if (isExist.isApproved) {
+    throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Approved');
   }
 
   const result = await prisma.transfer.delete({

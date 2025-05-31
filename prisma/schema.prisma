@@ -165,6 +165,7 @@ model Leave {
   days     Int
   toDate   DateTime
   remarks  String?
+  status   String   @default("Pending")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
