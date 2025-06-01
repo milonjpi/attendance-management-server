@@ -24,7 +24,7 @@ const getAll = async (
   filters: ITransferFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Transfer[]>> => {
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, officeId, ...filterData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -37,6 +37,11 @@ const getAll = async (
           contains: searchTerm,
         },
       })),
+    });
+  }
+  if (officeId) {
+    andConditions.push({
+      officeId,
     });
   }
 

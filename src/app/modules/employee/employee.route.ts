@@ -17,6 +17,13 @@ router.post(
   EmployeeController.createEmployee
 );
 
+// create user
+router.post(
+  '/user',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  EmployeeController.createUser
+);
+
 // get all Employees
 router.get(
   '/',
@@ -31,6 +38,13 @@ router.get(
   EmployeeController.getSingleEmployee
 );
 
+// get single user Employee
+router.get(
+  '/:id/user',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  EmployeeController.getSingleUserEmployee
+);
+
 // update Employee
 router.patch(
   '/:id',
@@ -39,6 +53,5 @@ router.patch(
   validateRequest(EmployeeValidation.update),
   EmployeeController.updateEmployee
 );
-
 
 export const EmployeeRoutes = router;

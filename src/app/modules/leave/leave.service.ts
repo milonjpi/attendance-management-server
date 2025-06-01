@@ -138,7 +138,8 @@ const getSingleLeave = async (id: number): Promise<Leave | null> => {
 // update Leave
 const updateLeave = async (
   id: number,
-  data: Partial<Leave>
+  data: Partial<Leave>,
+  role: string
 ): Promise<Leave | null> => {
   // check is exist
   const isExist = await prisma.leave.findFirst({
@@ -151,11 +152,11 @@ const updateLeave = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Leave Not Found');
   }
 
-  if (isExist.status === 'Approved') {
+  if (isExist.status === 'Approved' && role === 'user') {
     throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Approved');
   }
 
-  if (isExist.status === 'Rejected') {
+  if (isExist.status === 'Rejected' && role === 'user') {
     throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Rejected');
   }
 
@@ -170,7 +171,7 @@ const updateLeave = async (
 };
 
 // delete leave
-const deleteLeave = async (id: number): Promise<Leave | null> => {
+const deleteLeave = async (id: number, role: string): Promise<Leave | null> => {
   // check is exist
   const isExist = await prisma.leave.findFirst({
     where: {
@@ -182,11 +183,11 @@ const deleteLeave = async (id: number): Promise<Leave | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Leave Not Found');
   }
 
-  if (isExist.status === 'Approved') {
+  if (isExist.status === 'Approved' && role === 'user') {
     throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Approved');
   }
 
-  if (isExist.status === 'Rejected') {
+  if (isExist.status === 'Rejected' && role === 'user') {
     throw new ApiError(httpStatus.BAD_REQUEST, '!!Forbidden, Already Rejected');
   }
 

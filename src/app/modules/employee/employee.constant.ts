@@ -13,4 +13,5 @@ export const employeeFilterableFields = [
   'areaId',
   'isActive',
   'isOwn',
+  'userCreated',
 ];

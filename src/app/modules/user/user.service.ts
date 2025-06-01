@@ -5,7 +5,6 @@ import { User } from '@prisma/client';
 import ApiError from '../../../errors/ApiError';
 import config from '../../../config';
 
-
 // create user
 const createUser = async (data: User): Promise<User | null> => {
   data.password = await bcrypt.hash(
@@ -60,6 +59,11 @@ const updateUser = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
   }
 
+  if (isExist.isEmployee) {
+    delete payload.userName;
+    delete payload.fullName;
+  }
+
   // hashing password
   if (payload.password) {
     payload.password = await bcrypt.hash(
@@ -95,10 +99,19 @@ const deleteUser = async (id: number): Promise<User | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User Not Found');
   }
 
-  const result = await prisma.user.delete({
-    where: {
-      id,
-    },
+  const result = await prisma.$transaction(async trans => {
+    const findEmployee = await trans.employee.findFirst({
+      where: { officeId: isExist.userName },
+    });
+
+    if (findEmployee) {
+      await trans.employee.update({
+        where: { officeId: isExist.userName },
+        data: { userCreated: false },
+      });
+    }
+
+    return await trans.user.delete({ where: { id } });
   });
 
   return result;

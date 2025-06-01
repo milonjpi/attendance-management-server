@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import prisma from '../../../shared/prisma';
-import { Employee, Prisma } from '@prisma/client';
+import { Employee, Prisma, User } from '@prisma/client';
 import ApiError from '../../../errors/ApiError';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
@@ -19,6 +19,24 @@ const createEmployee = async (data: Employee): Promise<Employee | null> => {
       path.join(process.cwd(), `public/uploads/employees/${data?.photo}`)
     );
     throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to Add Employee');
+  }
+
+  return result;
+};
+
+// create user
+const createUser = async (data: User): Promise<User | null> => {
+  const result = await prisma.$transaction(async trans => {
+    await trans.employee.update({
+      where: { officeId: data.userName },
+      data: { userCreated: true },
+    });
+
+    return await trans.user.create({ data });
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user');
   }
 
   return result;
@@ -117,6 +135,28 @@ const getSingleEmployee = async (id: number): Promise<Employee | null> => {
   return result;
 };
 
+// get single user Employee
+const getSingleUserEmployee = async (
+  officeId: string
+): Promise<Employee | null> => {
+  const result = await prisma.employee.findFirst({
+    where: {
+      officeId,
+    },
+    include: {
+      designation: true,
+      department: true,
+      location: {
+        include: {
+          area: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
 // update Employee
 const updateEmployee = async (
   id: number,
@@ -133,11 +173,22 @@ const updateEmployee = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Employee Not Found');
   }
 
-  const result = await prisma.employee.update({
-    where: {
-      id,
-    },
-    data,
+  if (isExist.userCreated) {
+    delete data.officeId;
+  }
+
+  const result = await prisma.$transaction(async trans => {
+    const findUser = await trans.user.findFirst({
+      where: { userName: data?.officeId },
+    });
+    if (findUser) {
+      await trans.user.update({
+        where: { userName: data.officeId },
+        data: { fullName: data.name },
+      });
+    }
+
+    return await trans.employee.update({ where: { id }, data: data });
   });
 
   if (data?.photo && isExist?.photo) {
@@ -151,7 +202,9 @@ const updateEmployee = async (
 
 export const EmployeeService = {
   createEmployee,
+  createUser,
   getAllEmployees,
   getSingleEmployee,
+  getSingleUserEmployee,
   updateEmployee,
 };

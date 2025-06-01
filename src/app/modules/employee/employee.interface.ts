@@ -6,4 +6,5 @@ export type IEmployeeFilters = {
   areaId?: string;
   isActive?: string;
   isOwn?: string;
+  userCreated?: string;
 };

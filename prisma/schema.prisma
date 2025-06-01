@@ -17,6 +17,7 @@ model User {
   password   String
   role       String              @default("user")
   profileImg String?
+  isEmployee Boolean             @default(false)
   createdAt  DateTime            @default(now())
   updatedAt  DateTime            @updatedAt
   menus      MenuPermission[]
@@ -121,9 +122,10 @@ model Employee {
   contactNo String?
   address   String?
 
-  photo    String?
-  isActive Boolean @default(true)
-  isOwn    Boolean @default(false)
+  photo       String?
+  isActive    Boolean @default(true)
+  isOwn       Boolean @default(false)
+  userCreated Boolean @default(false)
 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

@@ -7,6 +7,7 @@ import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { LeaveService } from './leave.service';
 import { leaveFilterableFields } from './leave.constant';
+import { JwtPayload } from 'jsonwebtoken';
 
 // create Leave
 const createLeave = catchAsync(async (req: Request, res: Response) => {
@@ -56,8 +57,9 @@ const getSingleLeave = catchAsync(async (req: Request, res: Response) => {
 const updateLeave = catchAsync(async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const data = req.body;
+  const user = req.user as JwtPayload;
 
-  const result = await LeaveService.updateLeave(id, data);
+  const result = await LeaveService.updateLeave(id, data, user.role);
 
   sendResponse<Leave>(res, {
     statusCode: httpStatus.OK,
@@ -70,8 +72,9 @@ const updateLeave = catchAsync(async (req: Request, res: Response) => {
 // delete leave
 const deleteLeave = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
+  const user = req.user as JwtPayload;
 
-  const result = await LeaveService.deleteLeave(id);
+  const result = await LeaveService.deleteLeave(id, user.role);
 
   sendResponse<Leave>(res, {
     statusCode: httpStatus.OK,

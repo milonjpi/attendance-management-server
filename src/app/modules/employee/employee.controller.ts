@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
-import { Employee } from '@prisma/client';
+import { Employee, User } from '@prisma/client';
 import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { EmployeeService } from './employee.service';
@@ -18,6 +18,19 @@ const createEmployee = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Employee Added Successfully',
+    data: result,
+  });
+});
+
+const createUser = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body;
+
+  const result = await EmployeeService.createUser(data);
+
+  sendResponse<User>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User Created Successfully',
     data: result,
   });
 });
@@ -55,6 +68,22 @@ const getSingleEmployee = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get single user Employee
+const getSingleUserEmployee = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+
+    const result = await EmployeeService.getSingleUserEmployee(id);
+
+    sendResponse<Employee>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Employee retrieved successfully',
+      data: result,
+    });
+  }
+);
+
 // update Employee
 const updateEmployee = catchAsync(async (req: Request, res: Response) => {
   const id = Number(req.params.id);
@@ -70,10 +99,11 @@ const updateEmployee = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
 export const EmployeeController = {
   createEmployee,
+  createUser,
   getAllEmployees,
   getSingleEmployee,
+  getSingleUserEmployee,
   updateEmployee,
 };
