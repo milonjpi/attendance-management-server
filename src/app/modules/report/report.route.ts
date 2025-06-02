@@ -11,5 +11,10 @@ router.get(
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   ReportController.getEmployeesReport
 );
+router.get(
+  '/salary',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  ReportController.getSalaryReport
+);
 
 export const ReportRoutes = router;
