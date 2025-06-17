@@ -16,6 +16,11 @@ import { LeaveRoutes } from '../modules/leave/leave.route';
 import { AreaRoutes } from '../modules/area/area.route';
 import { SalaryRoutes } from '../modules/salary/salary.route';
 import { TransferRoutes } from '../modules/transfer/transfer.route';
+import { ItemTypeRoutes } from '../modules/itemType/itemType.route';
+import { VehicleTypeRoutes } from '../modules/vehicleType/vehicleType.route';
+import { ConveyanceRoutes } from '../modules/conveyance/conveyance.route';
+import { ItemRoutes } from '../modules/item/item.route';
+import { ShopRoutes } from '../modules/shop/shop.route';
 
 const router = express.Router();
 
@@ -87,6 +92,26 @@ const moduleRoutes = [
   {
     path: '/report',
     route: ReportRoutes,
+  },
+  {
+    path: '/item-type',
+    route: ItemTypeRoutes,
+  },
+  {
+    path: '/vehicle-type',
+    route: VehicleTypeRoutes,
+  },
+  {
+    path: '/conveyance',
+    route: ConveyanceRoutes,
+  },
+  {
+    path: '/item',
+    route: ItemRoutes,
+  },
+  {
+    path: '/shop',
+    route: ShopRoutes,
   },
 ];
 

@@ -10,7 +10,7 @@ const router = express.Router();
 // create
 router.post(
   '/create',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(TransferValidation.create),
   TransferController.insertIntoDB
 );
@@ -32,7 +32,7 @@ router.get(
 // update
 router.patch(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(TransferValidation.update),
   TransferController.updateSingle
 );
@@ -40,14 +40,14 @@ router.patch(
 // approve
 router.patch(
   '/:id/approve',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   TransferController.approveSingle
 );
 
 // delete
 router.delete(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   TransferController.deleteFromDB
 );
 

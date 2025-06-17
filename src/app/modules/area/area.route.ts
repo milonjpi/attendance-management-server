@@ -10,7 +10,7 @@ const router = express.Router();
 // create Area
 router.post(
   '/create',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(AreaValidation.create),
   AreaController.createArea
 );
@@ -32,7 +32,7 @@ router.get(
 // update Area
 router.patch(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(AreaValidation.update),
   AreaController.updateArea
 );
@@ -40,7 +40,7 @@ router.patch(
 // delete Area
 router.delete(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   AreaController.deleteArea
 );
 

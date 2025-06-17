@@ -10,7 +10,7 @@ const router = express.Router();
 // create Attendance
 router.post(
   '/create',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(AttendanceValidation.create),
   AttendanceController.createAttendance
 );
@@ -25,7 +25,7 @@ router.get(
 // delete Attendance
 router.delete(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   AttendanceController.deleteAttendance
 );
 

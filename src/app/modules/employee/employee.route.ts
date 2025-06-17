@@ -11,7 +11,7 @@ const router = express.Router();
 // create Employee
 router.post(
   '/create',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   employeeFilesUpload,
   validateRequest(EmployeeValidation.create),
   EmployeeController.createEmployee
@@ -20,7 +20,7 @@ router.post(
 // create user
 router.post(
   '/user',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   EmployeeController.createUser
 );
 
@@ -48,7 +48,7 @@ router.get(
 // update Employee
 router.patch(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   employeeFilesUpload,
   validateRequest(EmployeeValidation.update),
   EmployeeController.updateEmployee

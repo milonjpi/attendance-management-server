@@ -10,7 +10,7 @@ const router = express.Router();
 // create designation
 router.post(
   '/create',
-  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  // auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(DesignationValidation.createUpdate),
   DesignationController.createDesignation
 );
@@ -32,7 +32,7 @@ router.get(
 // update single designation
 router.patch(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(DesignationValidation.createUpdate),
   DesignationController.updateDesignation
 );
@@ -40,7 +40,7 @@ router.patch(
 // delete single designation
 router.delete(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   DesignationController.deleteDesignation
 );
 

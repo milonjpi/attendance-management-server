@@ -2,8 +2,8 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import auth from '../../middlewares/auth';
 import { ENUM_USER_ROLE } from '../../../enums/user';
-import { SalaryValidation } from './salary.validation';
-import { SalaryController } from './salary.controller';
+import { ShopValidation } from './shop.validation';
+import { ShopController } from './shop.controller';
 
 const router = express.Router();
 
@@ -11,37 +11,37 @@ const router = express.Router();
 router.post(
   '/create',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  validateRequest(SalaryValidation.create),
-  SalaryController.insertIntoDB
+  validateRequest(ShopValidation.create),
+  ShopController.insertIntoDB
 );
 
 // get all
 router.get(
   '/',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  SalaryController.getAll
+  ShopController.getAll
 );
 
 // get single
 router.get(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  SalaryController.getSingle
+  ShopController.getSingle
 );
 
 // update
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  validateRequest(SalaryValidation.update),
-  SalaryController.updateSingle
+  validateRequest(ShopValidation.update),
+  ShopController.updateSingle
 );
 
 // delete
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
-  SalaryController.deleteFromDB
+  ShopController.deleteFromDB
 );
 
-export const SalaryRoutes = router;
+export const ShopRoutes = router;

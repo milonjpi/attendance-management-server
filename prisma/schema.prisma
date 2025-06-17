@@ -11,18 +11,20 @@ datasource db {
 }
 
 model User {
-  id         Int                 @id @default(autoincrement())
-  fullName   String
-  userName   String              @unique
-  password   String
-  role       String              @default("user")
-  profileImg String?
-  isEmployee Boolean             @default(false)
-  createdAt  DateTime            @default(now())
-  updatedAt  DateTime            @updatedAt
-  menus      MenuPermission[]
-  subMenus   SubMenuPermission[]
-  sections   SectionPermission[]
+  id          Int                 @id @default(autoincrement())
+  fullName    String
+  userName    String              @unique
+  password    String
+  role        String              @default("user")
+  profileImg  String?
+  isEmployee  Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  menus       MenuPermission[]
+  subMenus    SubMenuPermission[]
+  sections    SectionPermission[]
+  conveyances Conveyance[]
+  bills       Bill[]
 
   @@map("users")
 }
@@ -134,6 +136,8 @@ model Employee {
   leaves      Leave[]
   salaries    Salary[]
   transfers   Transfer[]
+  conveyances Conveyance[]
+  bills       Bill[]
 
   @@map("employees")
 }
@@ -206,4 +210,140 @@ model Transfer {
   updatedAt DateTime @updatedAt
 
   @@map("transfers")
+}
+
+model ItemType {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  conveyanceDetails ConveyanceDetail[]
+
+  @@map("itemTypes")
+}
+
+model VehicleType {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  conveyanceDetails ConveyanceDetail[]
+
+  @@map("vehicleTypes")
+}
+
+model Conveyance {
+  id       Int      @id @default(autoincrement())
+  officeId String
+  employee Employee @relation(fields: [officeId], references: [officeId])
+  date     DateTime
+  amount   Int
+  remarks  String?
+  status   String   @default("Pending")
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  conveyanceDetails ConveyanceDetail[]
+
+  @@map("conveyances")
+}
+
+model ConveyanceDetail {
+  id            Int          @id @default(autoincrement())
+  conveyanceId  Int
+  conveyance    Conveyance   @relation(fields: [conveyanceId], references: [id])
+  itemTypeId    Int
+  itemType      ItemType     @relation(fields: [itemTypeId], references: [id])
+  from          String?
+  to            String?
+  distance      Int          @default(0)
+  vehicleTypeId Int?
+  vehicleType   VehicleType? @relation(fields: [vehicleTypeId], references: [id])
+  details       String?
+  amount        Int
+  remarks       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("conveyanceDetails")
+}
+
+model Bill {
+  id       Int      @id @default(autoincrement())
+  officeId String
+  employee Employee @relation(fields: [officeId], references: [officeId])
+  date     DateTime
+  amount   Int
+  remarks  String?
+  status   String   @default("Pending")
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  billDetails BillDetail[]
+
+  @@map("bills")
+}
+
+model Item {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  billDetails BillDetail[]
+
+  @@map("items")
+}
+
+model Shop {
+  id      Int     @id @default(autoincrement())
+  label   String  @unique
+  address String?
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  billDetails BillDetail[]
+
+  @@map("shops")
+}
+
+model Uom {
+  id    Int    @id @default(autoincrement())
+  label String @unique
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  billDetails BillDetail[]
+
+  @@map("uom")
+}
+
+model BillDetail {
+  id       Int     @id @default(autoincrement())
+  billId   Int
+  bill     Bill    @relation(fields: [billId], references: [id])
+  itemId   Int
+  item     Item    @relation(fields: [itemId], references: [id])
+  shopId   Int?
+  shop     Shop?   @relation(fields: [shopId], references: [id])
+  details  String?
+  uomId    Int?
+  uom      Uom?    @relation(fields: [uomId], references: [id])
+  quantity Float?
+  amount   Int
+  remarks  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("billDetails")
 }

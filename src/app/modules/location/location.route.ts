@@ -10,7 +10,7 @@ const router = express.Router();
 // create Location
 router.post(
   '/create',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(LocationValidation.create),
   LocationController.createLocation
 );
@@ -32,7 +32,7 @@ router.get(
 // update single Location
 router.patch(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(LocationValidation.update),
   LocationController.updateLocation
 );
@@ -40,7 +40,7 @@ router.patch(
 // delete single Location
 router.delete(
   '/:id',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   LocationController.deleteLocation
 );
 
