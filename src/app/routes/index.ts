@@ -21,6 +21,8 @@ import { VehicleTypeRoutes } from '../modules/vehicleType/vehicleType.route';
 import { ConveyanceRoutes } from '../modules/conveyance/conveyance.route';
 import { ItemRoutes } from '../modules/item/item.route';
 import { ShopRoutes } from '../modules/shop/shop.route';
+import { UomRoutes } from '../modules/uom/uom.route';
+import { BillRoutes } from '../modules/bill/bill.route';
 
 const router = express.Router();
 
@@ -112,6 +114,14 @@ const moduleRoutes = [
   {
     path: '/shop',
     route: ShopRoutes,
+  },
+  {
+    path: '/uom',
+    route: UomRoutes,
+  },
+  {
+    path: '/bill',
+    route: BillRoutes,
   },
 ];
 
