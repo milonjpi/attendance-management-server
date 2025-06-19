@@ -5,7 +5,10 @@ import ApiError from '../../../errors/ApiError';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { IConveyanceFilters } from './conveyance.interface';
+import {
+  IConveyanceFilters,
+  IConveyanceResponse,
+} from './conveyance.interface';
 import { conveyanceSearchableFields } from './conveyance.constant';
 
 // create
@@ -28,7 +31,7 @@ const insertIntoDB = async (
 const getAll = async (
   filters: IConveyanceFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<Conveyance[]>> => {
+): Promise<IGenericResponse<IConveyanceResponse>> => {
   const { searchTerm, officeId, ...filterData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
@@ -89,6 +92,13 @@ const getAll = async (
   });
   const totalPage = Math.ceil(total / limit);
 
+  const totalCount = await prisma.conveyance.aggregate({
+    where: whereConditions,
+    _sum: {
+      amount: true,
+    },
+  });
+
   return {
     meta: {
       page,
@@ -96,7 +106,10 @@ const getAll = async (
       total,
       totalPage,
     },
-    data: result,
+    data: {
+      data: result,
+      sum: totalCount,
+    },
   };
 };
 

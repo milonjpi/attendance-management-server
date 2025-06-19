@@ -112,10 +112,20 @@ const deleteFromDB = async (id: number): Promise<VehicleType | null> => {
     where: {
       id,
     },
+    include: {
+      conveyanceDetails: true,
+    },
   });
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
+  }
+
+  if (isExist.conveyanceDetails?.length) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Engaged with ${isExist.conveyanceDetails?.length} Docs`
+    );
   }
 
   const result = await prisma.vehicleType.delete({

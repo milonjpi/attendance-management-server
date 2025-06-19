@@ -7,6 +7,7 @@ import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { ConveyanceService } from './conveyance.service';
 import { conveyanceFilterableFields } from './conveyance.constant';
+import { IConveyanceResponse } from './conveyance.interface';
 
 // create
 const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
@@ -29,7 +30,7 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
 
   const result = await ConveyanceService.getAll(filters, paginationOptions);
 
-  sendResponse<Conveyance[]>(res, {
+  sendResponse<IConveyanceResponse>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Conveyances retrieved successfully',

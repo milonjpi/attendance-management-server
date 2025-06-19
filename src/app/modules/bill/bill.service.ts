@@ -5,7 +5,7 @@ import ApiError from '../../../errors/ApiError';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { IBillFilters } from './bill.interface';
+import { IBillFilters, IBillResponse } from './bill.interface';
 import { billSearchableFields } from './bill.constant';
 
 // create
@@ -28,7 +28,7 @@ const insertIntoDB = async (
 const getAll = async (
   filters: IBillFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<Bill[]>> => {
+): Promise<IGenericResponse<IBillResponse>> => {
   const { searchTerm, officeId, ...filterData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
@@ -89,6 +89,13 @@ const getAll = async (
   });
   const totalPage = Math.ceil(total / limit);
 
+  const totalCount = await prisma.bill.aggregate({
+    where: whereConditions,
+    _sum: {
+      amount: true,
+    },
+  });
+
   return {
     meta: {
       page,
@@ -96,7 +103,10 @@ const getAll = async (
       total,
       totalPage,
     },
-    data: result,
+    data: {
+      data: result,
+      sum: totalCount,
+    },
   };
 };
 
