@@ -6,7 +6,10 @@ import { Conveyance } from '@prisma/client';
 import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { ConveyanceService } from './conveyance.service';
-import { conveyanceFilterableFields } from './conveyance.constant';
+import {
+  conveyanceFilterableFields,
+  conveyanceLocationFilterableFields,
+} from './conveyance.constant';
 import { IConveyanceResponse } from './conveyance.interface';
 
 // create
@@ -114,6 +117,19 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get locations
+const getLocation = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, conveyanceLocationFilterableFields);
+  const result = await ConveyanceService.getLocation(filters);
+
+  sendResponse<string[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Locations retrieved successfully',
+    data: result,
+  });
+});
+
 export const ConveyanceController = {
   insertIntoDB,
   getAll,
@@ -122,4 +138,5 @@ export const ConveyanceController = {
   approveSingle,
   rejectSingle,
   deleteFromDB,
+  getLocation,
 };

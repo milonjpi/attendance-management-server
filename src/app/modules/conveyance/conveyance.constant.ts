@@ -5,6 +5,8 @@ export const conveyanceFilterableFields = [
   'searchTerm',
   'officeId',
   'startDate',
-  'enDate',
+  'endDate',
   'status',
 ];
+
+export const conveyanceLocationFilterableFields = ['type'];

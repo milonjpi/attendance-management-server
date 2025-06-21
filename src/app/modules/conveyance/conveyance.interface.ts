@@ -4,8 +4,12 @@ export type IConveyanceFilters = {
   searchTerm?: string;
   officeId?: string;
   startDate?: string;
-  enDate?: string;
+  endDate?: string;
   status?: string;
+};
+
+export type IConveyanceLocationFilters = {
+  type?: string;
 };
 
 type ISum = {

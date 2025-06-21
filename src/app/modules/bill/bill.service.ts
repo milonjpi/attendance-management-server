@@ -29,7 +29,7 @@ const getAll = async (
   filters: IBillFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IBillResponse>> => {
-  const { searchTerm, officeId, ...filterData } = filters;
+  const { searchTerm, officeId, startDate, endDate, status } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -50,12 +50,24 @@ const getAll = async (
     });
   }
 
-  if (Object.keys(filterData).length > 0) {
+  if (startDate) {
     andConditions.push({
-      AND: Object.entries(filterData).map(([field, value]) => ({
-        [field]:
-          value === 'true' ? true : value === 'false' ? false : Number(value),
-      })),
+      date: {
+        gte: new Date(`${startDate}, 00:00:00`),
+      },
+    });
+  }
+  if (endDate) {
+    andConditions.push({
+      date: {
+        lte: new Date(`${endDate}, 23:59:59`),
+      },
+    });
+  }
+
+  if (status) {
+    andConditions.push({
+      status: status,
     });
   }
 
@@ -79,6 +91,13 @@ const getAll = async (
               area: true,
             },
           },
+        },
+      },
+      billDetails: {
+        include: {
+          item: true,
+          shop: true,
+          uom: true,
         },
       },
     },

@@ -4,7 +4,7 @@ export type IBillFilters = {
   searchTerm?: string;
   officeId?: string;
   startDate?: string;
-  enDate?: string;
+  endDate?: string;
   status?: string;
 };
 

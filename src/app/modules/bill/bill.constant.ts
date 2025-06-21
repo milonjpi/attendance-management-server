@@ -5,6 +5,6 @@ export const billFilterableFields = [
   'searchTerm',
   'officeId',
   'startDate',
-  'enDate',
+  'endDate',
   'status',
 ];

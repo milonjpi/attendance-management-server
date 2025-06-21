@@ -7,6 +7,7 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import {
   IConveyanceFilters,
+  IConveyanceLocationFilters,
   IConveyanceResponse,
 } from './conveyance.interface';
 import { conveyanceSearchableFields } from './conveyance.constant';
@@ -32,7 +33,7 @@ const getAll = async (
   filters: IConveyanceFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IConveyanceResponse>> => {
-  const { searchTerm, officeId, ...filterData } = filters;
+  const { searchTerm, officeId, startDate, endDate, status } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -53,12 +54,24 @@ const getAll = async (
     });
   }
 
-  if (Object.keys(filterData).length > 0) {
+  if (startDate) {
     andConditions.push({
-      AND: Object.entries(filterData).map(([field, value]) => ({
-        [field]:
-          value === 'true' ? true : value === 'false' ? false : Number(value),
-      })),
+      date: {
+        gte: new Date(`${startDate}, 00:00:00`),
+      },
+    });
+  }
+  if (endDate) {
+    andConditions.push({
+      date: {
+        lte: new Date(`${endDate}, 23:59:59`),
+      },
+    });
+  }
+
+  if (status) {
+    andConditions.push({
+      status: status,
     });
   }
 
@@ -82,6 +95,12 @@ const getAll = async (
               area: true,
             },
           },
+        },
+      },
+      conveyanceDetails: {
+        include: {
+          itemType: true,
+          vehicleType: true,
         },
       },
     },
@@ -249,6 +268,36 @@ const deleteFromDB = async (id: number): Promise<Conveyance | null> => {
   return result;
 };
 
+// get location
+const getLocation = async (
+  filters: IConveyanceLocationFilters
+): Promise<string[]> => {
+  const { type } = filters;
+
+  const result = await prisma.$queryRawUnsafe<{ location: string }[]>(
+    `
+    SELECT DISTINCT location FROM (
+      SELECT cd.[from] AS location
+      FROM [conveyanceDetails] cd
+      JOIN [itemTypes] it ON cd.[itemTypeId] = it.[id]
+      WHERE cd.[from] IS NOT NULL AND it.[label] = @itemType
+
+      UNION
+
+      SELECT cd.[to] AS location
+      FROM [conveyanceDetails] cd
+      JOIN [itemTypes] it ON cd.[itemTypeId] = it.[id]
+      WHERE cd.[to] IS NOT NULL AND it.[label] = @itemType
+    ) AS combined
+    `,
+    { type } // ✅ bind named parameter
+  );
+
+  const locations: string[] = result.map(row => row.location);
+
+  return locations;
+};
+
 export const ConveyanceService = {
   insertIntoDB,
   getAll,
@@ -257,4 +306,5 @@ export const ConveyanceService = {
   approveSingle,
   rejectSingle,
   deleteFromDB,
+  getLocation,
 };

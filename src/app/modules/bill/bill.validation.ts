@@ -9,7 +9,7 @@ const create = z.object({
     billDetails: z
       .object({
         itemId: z.number({ required_error: 'Item ID is Required' }),
-        shopId: z.string().optional().nullable(),
+        shopId: z.number().optional().nullable(),
         details: z.string().optional().nullable(),
         uomId: z.number().nullable(),
         quantity: z.number().default(0),
@@ -29,7 +29,7 @@ const update = z.object({
     billDetails: z
       .object({
         itemId: z.number({ required_error: 'Item ID is Required' }),
-        shopId: z.string().optional().nullable(),
+        shopId: z.number().optional().nullable(),
         details: z.string().optional().nullable(),
         uomId: z.number().nullable(),
         quantity: z.number().default(0),

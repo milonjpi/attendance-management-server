@@ -22,6 +22,13 @@ router.get(
   ConveyanceController.getAll
 );
 
+// get locations
+router.get(
+  '/location',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  ConveyanceController.getLocation
+);
+
 // get single
 router.get(
   '/:id',

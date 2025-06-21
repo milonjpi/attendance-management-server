@@ -8,10 +8,15 @@ import { paginationFields } from '../../../constants/pagination';
 import { BillService } from './bill.service';
 import { billFilterableFields } from './bill.constant';
 import { IBillResponse } from './bill.interface';
+import { JwtPayload } from 'jsonwebtoken';
 
 // create
 const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
   const { billDetails, ...data } = req.body;
+
+  const userData = req.user as JwtPayload;
+
+  data.userId = userData?.id;
 
   const result = await BillService.insertIntoDB(data, billDetails);
 
