@@ -6,15 +6,17 @@ import { Conveyance } from '@prisma/client';
 import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { ConveyanceService } from './conveyance.service';
-import {
-  conveyanceFilterableFields,
-  conveyanceLocationFilterableFields,
-} from './conveyance.constant';
+import { conveyanceFilterableFields } from './conveyance.constant';
 import { IConveyanceResponse } from './conveyance.interface';
+import { JwtPayload } from 'jsonwebtoken';
 
 // create
 const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
   const { conveyanceDetails, ...data } = req.body;
+
+  const userData = req.user as JwtPayload;
+
+  data.userId = userData?.id;
 
   const result = await ConveyanceService.insertIntoDB(data, conveyanceDetails);
 
@@ -119,8 +121,7 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
 
 // get locations
 const getLocation = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, conveyanceLocationFilterableFields);
-  const result = await ConveyanceService.getLocation(filters);
+  const result = await ConveyanceService.getLocation();
 
   sendResponse<string[]>(res, {
     statusCode: httpStatus.OK,

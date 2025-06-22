@@ -8,13 +8,10 @@ export type IConveyanceFilters = {
   status?: string;
 };
 
-export type IConveyanceLocationFilters = {
-  type?: string;
-};
-
 type ISum = {
   _sum: {
     amount: number | null;
+    extraAmount: number | null;
   };
 };
 

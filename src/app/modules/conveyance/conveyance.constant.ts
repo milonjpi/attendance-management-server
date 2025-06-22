@@ -8,5 +8,3 @@ export const conveyanceFilterableFields = [
   'endDate',
   'status',
 ];
-
-export const conveyanceLocationFilterableFields = ['type'];

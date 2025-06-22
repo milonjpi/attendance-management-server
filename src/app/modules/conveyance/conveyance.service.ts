@@ -7,7 +7,6 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import {
   IConveyanceFilters,
-  IConveyanceLocationFilters,
   IConveyanceResponse,
 } from './conveyance.interface';
 import { conveyanceSearchableFields } from './conveyance.constant';
@@ -97,10 +96,10 @@ const getAll = async (
           },
         },
       },
+      vehicleType: true,
       conveyanceDetails: {
         include: {
           itemType: true,
-          vehicleType: true,
         },
       },
     },
@@ -115,6 +114,7 @@ const getAll = async (
     where: whereConditions,
     _sum: {
       amount: true,
+      extraAmount: true,
     },
   });
 
@@ -148,6 +148,12 @@ const getSingle = async (id: number): Promise<Conveyance | null> => {
               area: true,
             },
           },
+        },
+      },
+      vehicleType: true,
+      conveyanceDetails: {
+        include: {
+          itemType: true,
         },
       },
     },
@@ -269,29 +275,20 @@ const deleteFromDB = async (id: number): Promise<Conveyance | null> => {
 };
 
 // get location
-const getLocation = async (
-  filters: IConveyanceLocationFilters
-): Promise<string[]> => {
-  const { type } = filters;
-
-  const result = await prisma.$queryRawUnsafe<{ location: string }[]>(
-    `
-    SELECT DISTINCT location FROM (
-      SELECT cd.[from] AS location
-      FROM [conveyanceDetails] cd
-      JOIN [itemTypes] it ON cd.[itemTypeId] = it.[id]
-      WHERE cd.[from] IS NOT NULL AND it.[label] = @itemType
-
-      UNION
-
-      SELECT cd.[to] AS location
-      FROM [conveyanceDetails] cd
-      JOIN [itemTypes] it ON cd.[itemTypeId] = it.[id]
-      WHERE cd.[to] IS NOT NULL AND it.[label] = @itemType
-    ) AS combined
-    `,
-    { type } // ✅ bind named parameter
-  );
+const getLocation = async (): Promise<string[]> => {
+  const result = await prisma.$queryRaw<{ location: string }[]>`
+  SELECT DISTINCT location FROM (
+    SELECT [from] AS location 
+    FROM [conveyances] 
+    WHERE [from] IS NOT NULL AND [from] <> ''
+    
+    UNION
+    
+    SELECT [to] AS location 
+    FROM [conveyances] 
+    WHERE [to] IS NOT NULL AND [to] <> ''
+  ) AS combined
+`;
 
   const locations: string[] = result.map(row => row.location);
 
