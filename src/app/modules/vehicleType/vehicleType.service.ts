@@ -113,7 +113,7 @@ const deleteFromDB = async (id: number): Promise<VehicleType | null> => {
       id,
     },
     include: {
-      conveyanceDetails: true,
+      conveyances: true,
     },
   });
 
@@ -121,10 +121,10 @@ const deleteFromDB = async (id: number): Promise<VehicleType | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Not Found');
   }
 
-  if (isExist.conveyanceDetails?.length) {
+  if (isExist.conveyances?.length) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      `Engaged with ${isExist.conveyanceDetails?.length} Docs`
+      `Engaged with ${isExist.conveyances?.length} Docs`
     );
   }
 

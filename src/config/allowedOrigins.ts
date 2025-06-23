@@ -8,6 +8,7 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
   'http://localhost:3000',
   'http://payroll.tbz.com.bd',
+  'http://vas.tbz.com.bd',
 ];
 
 export default allowedOrigins;
