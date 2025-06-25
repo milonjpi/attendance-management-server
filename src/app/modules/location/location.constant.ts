@@ -1,3 +1,3 @@
-export const locationSearchableFields = ['label', 'address'];
+export const locationSearchableFields = ['label', 'address', 'lat', 'lon'];
 
 export const locationFilterableFields = ['searchTerm', 'areaId'];

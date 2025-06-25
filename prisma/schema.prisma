@@ -17,6 +17,7 @@ model User {
   password    String
   role        String              @default("user")
   profileImg  String?
+  deviceId    String?
   isEmployee  Boolean             @default(false)
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
@@ -95,6 +96,8 @@ model Location {
   areaId  Int?
   area    Area?   @relation(fields: [areaId], references: [id])
   address String?
+  lat     String?
+  lon     String?
 
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
@@ -158,6 +161,8 @@ model Attendance {
   date      DateTime  @default(now())
   inTime    DateTime?
   outTime   DateTime?
+  deviceId  String?
+  location  String?
   realPunch Boolean   @default(true)
 
   @@map("attendances")
