@@ -6,7 +6,10 @@ import { Attendance } from '@prisma/client';
 import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { AttendanceService } from './attendance.service';
-import { attendanceFilterableFields } from './attendance.constant';
+import {
+  attendanceFilterableFields,
+  singleAttendanceFilterableFields,
+} from './attendance.constant';
 
 // create Attendance
 const createAttendance = catchAsync(async (req: Request, res: Response) => {
@@ -18,6 +21,34 @@ const createAttendance = catchAsync(async (req: Request, res: Response) => {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Attendance Added Successfully',
+    data: result,
+  });
+});
+
+// create geo Attendance
+const createGeoAttendance = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body;
+
+  const result = await AttendanceService.createGeoAttendance(data);
+
+  sendResponse<Attendance>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Attendance Added Successfully',
+    data: result,
+  });
+});
+
+// create geo leave
+const createGeoLeave = catchAsync(async (req: Request, res: Response) => {
+  const data = req.body;
+
+  const result = await AttendanceService.createGeoLeave(data);
+
+  sendResponse<Attendance>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Leave Successfully',
     data: result,
   });
 });
@@ -41,6 +72,20 @@ const getAllAttendances = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get single Attendance
+const getSingleAttendances = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, singleAttendanceFilterableFields);
+
+  const result = await AttendanceService.getSingleAttendances(filters);
+
+  sendResponse<Attendance | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Attendances retrieved successfully',
+    data: result,
+  });
+});
+
 // delete attendance
 const deleteAttendance = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
@@ -57,6 +102,9 @@ const deleteAttendance = catchAsync(async (req: Request, res: Response) => {
 
 export const AttendanceController = {
   createAttendance,
+  createGeoAttendance,
+  createGeoLeave,
   getAllAttendances,
+  getSingleAttendances,
   deleteAttendance,
 };

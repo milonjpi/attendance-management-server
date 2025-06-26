@@ -5,3 +5,9 @@ export type IAttendanceFilters = {
   realPunch?: string;
   locationId?: string;
 };
+
+export type ISingleAttendanceFilters = {
+  officeId?: string;
+  startDate?: string;
+  endDate?: string;
+};

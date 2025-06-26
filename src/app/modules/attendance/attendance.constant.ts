@@ -5,3 +5,8 @@ export const attendanceFilterableFields = [
   'realPunch',
   'locationId',
 ];
+export const singleAttendanceFilterableFields = [
+  'officeId',
+  'startDate',
+  'endDate',
+];
