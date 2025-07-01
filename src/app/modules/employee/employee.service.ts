@@ -179,12 +179,12 @@ const updateEmployee = async (
 
   const result = await prisma.$transaction(async trans => {
     const findUser = await trans.user.findFirst({
-      where: { userName: data?.officeId },
+      where: { userName: isExist?.officeId },
     });
     if (findUser) {
       await trans.user.update({
-        where: { userName: data.officeId },
-        data: { fullName: data.name },
+        where: { userName: isExist.officeId },
+        data: { fullName: data.name || isExist.name },
       });
     }
 
