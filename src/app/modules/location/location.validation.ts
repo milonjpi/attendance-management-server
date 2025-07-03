@@ -7,6 +7,7 @@ const create = z.object({
     address: z.string({ required_error: 'Address is Required' }),
     lat: z.string().optional().nullable(),
     lon: z.string().optional().nullable(),
+    weekend: z.string().optional(),
   }),
 });
 
@@ -17,6 +18,7 @@ const update = z.object({
     address: z.string().optional(),
     lat: z.string().optional().nullable(),
     lon: z.string().optional().nullable(),
+    weekend: z.string().optional(),
   }),
 });
 

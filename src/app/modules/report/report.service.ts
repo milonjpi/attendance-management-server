@@ -117,7 +117,8 @@ const getEmployeesReport = async (
 const getSalaryReport = async (
   filters: IEmployeeReportFilters
 ): Promise<IEmployeeSalary[]> => {
-  const { startDate, endDate, locationId, isActive, isOwn } = filters;
+  const { startDate, endDate, locationId, isActive, isOwn, employeeId } =
+    filters;
 
   // off day count
   let totalDays = 0;
@@ -128,6 +129,12 @@ const getSalaryReport = async (
   }
 
   const andConditions = [];
+
+  if (employeeId) {
+    andConditions.push({
+      officeId: employeeId,
+    });
+  }
 
   if (locationId) {
     andConditions.push({
@@ -217,7 +224,6 @@ const getSalaryReport = async (
     const presents = el.attendances?.length || 0;
     const leaves = el.leaves?.length || 0;
     const absent = workingDay - presents - leaves;
-    const totalPresent = presents + leaves;
     const findSalary = el.salaries?.find(
       bl =>
         parseInt(moment(startDate).format('YYYYMMDD')) >=
@@ -227,8 +233,17 @@ const getSalaryReport = async (
             parseInt(moment(bl.toDate).format('YYYYMMDD'))
           : true)
     );
-    const finalSalary = Math.round(
-      ((findSalary?.salary || 0) / workingDay) * totalPresent
+    const findRecent =
+      el.joiningDate &&
+      moment(el.joiningDate).format('YYYYMM') ===
+        moment(startDate).format('YYYYMM')
+        ? countTotalDaysBetween(
+            moment(el.joiningDate).format('YYYY-MM-DD'),
+            moment(el.joiningDate).endOf('month').format('YYYY-MM-DD')
+          )
+        : totalDays;
+    const totalSalary = Math.round(
+      ((findSalary?.salary || 0) / totalDays) * findRecent
     );
     return {
       officeId: el.officeId,
@@ -242,7 +257,7 @@ const getSalaryReport = async (
       presents,
       leaves,
       absent: absent > 0 ? absent : 0,
-      salary: finalSalary,
+      salary: totalSalary,
     };
   });
 
