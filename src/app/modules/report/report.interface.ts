@@ -14,12 +14,16 @@ export type IEmployeeSalary = {
   fullName: string;
   designation: string;
   department: string;
+  joiningDate: string;
   branch: string;
+  address: string;
   totalDay: number;
-  weekend: number;
+  weekends: number;
   workingDay: number;
   presents: number;
   leaves: number;
   absent: number;
   salary: number;
+  earnSalary: number;
+  deduction: number;
 };

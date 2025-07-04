@@ -7,7 +7,7 @@ import { IEmployeeReportFilters, IEmployeeSalary } from './report.interface';
 import { employeeReportSearchableFields } from './report.constant';
 import moment from 'moment';
 import {
-  countFridaysBetween,
+  countDaysBetween,
   countTotalDaysBetween,
 } from '../../../helpers/neccesseryFunctions';
 
@@ -120,14 +120,6 @@ const getSalaryReport = async (
   const { startDate, endDate, locationId, isActive, isOwn, employeeId } =
     filters;
 
-  // off day count
-  let totalDays = 0;
-  let offDays = 0;
-  if (startDate && endDate) {
-    totalDays = countTotalDaysBetween(startDate, endDate);
-    offDays = countFridaysBetween(startDate, endDate);
-  }
-
   const andConditions = [];
 
   if (employeeId) {
@@ -220,10 +212,38 @@ const getSalaryReport = async (
   });
 
   const mappedResult = result?.map(el => {
-    const workingDay = totalDays - offDays;
+    // off day count
+    let monthDays = 0;
+    let totalDays = 0;
+    let weekends = 0;
+    if (startDate && endDate) {
+      monthDays = countTotalDaysBetween(
+        startDate,
+        moment(startDate).endOf('month').format('YYYY-MM-DD')
+      );
+      totalDays = countTotalDaysBetween(startDate, endDate);
+      weekends = countDaysBetween(
+        startDate,
+        moment(startDate).endOf('month').format('YYYY-MM-DD'),
+        el.location.weekend
+      );
+    }
+    const workingDay =
+      el.joiningDate &&
+      endDate &&
+      moment(el.joiningDate).format('YYYYMM') ===
+        moment(startDate).format('YYYYMM')
+        ? countTotalDaysBetween(
+            moment(el.joiningDate).format('YYYY-MM-DD'),
+            endDate
+          )
+        : totalDays;
+
+    const absentDay = monthDays - workingDay;
+
     const presents = el.attendances?.length || 0;
     const leaves = el.leaves?.length || 0;
-    const absent = workingDay - presents - leaves;
+
     const findSalary = el.salaries?.find(
       bl =>
         parseInt(moment(startDate).format('YYYYMMDD')) >=
@@ -233,31 +253,32 @@ const getSalaryReport = async (
             parseInt(moment(bl.toDate).format('YYYYMMDD'))
           : true)
     );
-    const findRecent =
-      el.joiningDate &&
-      moment(el.joiningDate).format('YYYYMM') ===
-        moment(startDate).format('YYYYMM')
-        ? countTotalDaysBetween(
-            moment(el.joiningDate).format('YYYY-MM-DD'),
-            moment(el.joiningDate).endOf('month').format('YYYY-MM-DD')
-          )
-        : totalDays;
+
     const totalSalary = Math.round(
-      ((findSalary?.salary || 0) / totalDays) * findRecent
+      ((findSalary?.salary || 0) / monthDays) * workingDay
+    );
+    const totalDeduction = Math.round(
+      ((findSalary?.salary || 0) / monthDays) * absentDay
     );
     return {
       officeId: el.officeId,
       fullName: el.name,
       designation: el.designation?.label,
       department: el.department?.label,
+      joiningDate: el.joiningDate
+        ? moment(el.joiningDate).format('DD/MM/YYYY')
+        : 'n/a',
       branch: el.location?.label + ', ' + el.location?.area?.label,
-      totalDay: totalDays,
-      weekend: offDays,
+      address: el.location.address || '',
+      totalDay: monthDays,
+      weekends,
       workingDay,
       presents,
       leaves,
-      absent: absent > 0 ? absent : 0,
-      salary: totalSalary,
+      absent: monthDays - workingDay,
+      salary: findSalary?.salary || 0,
+      earnSalary: totalSalary,
+      deduction: totalDeduction,
     };
   });
 
