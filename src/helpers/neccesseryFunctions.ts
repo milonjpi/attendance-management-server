@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const countFridaysBetween = (
   startDateStr: string,
   endDateStr: string
@@ -21,6 +23,27 @@ export const countFridaysBetween = (
   }
 
   return fridayCount;
+};
+
+export const countDaysBetween = (
+  startDateStr: string,
+  endDateStr: string,
+  day: string // e.g., "Friday"
+): number => {
+  const startDate = moment(startDateStr).startOf('day');
+  const endDate = moment(endDateStr).startOf('day');
+  let dayCount = 0;
+
+  const currentDate = startDate.clone();
+
+  while (currentDate.isSameOrBefore(endDate, 'day')) {
+    if (currentDate.format('dddd').toLowerCase() === day.toLowerCase()) {
+      dayCount++;
+    }
+    currentDate.add(1, 'day');
+  }
+
+  return dayCount;
 };
 
 export const countTotalDaysBetween = (
