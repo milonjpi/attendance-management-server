@@ -6,6 +6,7 @@ export type IBillFilters = {
   startDate?: string;
   endDate?: string;
   status?: string;
+  isService?: string;
 };
 
 type ISum = {

@@ -265,10 +265,20 @@ const deleteFromDB = async (id: number): Promise<Conveyance | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Conveyance Not Found');
   }
 
-  const result = await prisma.conveyance.delete({
-    where: {
-      id,
-    },
+  if (isExist.status !== 'Pending') {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'You Cant Delete after Approved/Rejected'
+    );
+  }
+
+  const result = await prisma.$transaction(async trans => {
+    await trans.conveyance.update({
+      where: { id },
+      data: { conveyanceDetails: { deleteMany: {} } },
+    });
+
+    return await trans.conveyance.delete({ where: { id } });
   });
 
   return result;

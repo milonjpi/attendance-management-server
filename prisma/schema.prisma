@@ -282,13 +282,14 @@ model ConveyanceDetail {
 }
 
 model Bill {
-  id       Int      @id @default(autoincrement())
-  officeId String
-  employee Employee @relation(fields: [officeId], references: [officeId])
-  date     DateTime
-  amount   Int
-  remarks  String?
-  status   String   @default("Pending")
+  id        Int      @id @default(autoincrement())
+  isService Boolean  @default(false)
+  officeId  String
+  employee  Employee @relation(fields: [officeId], references: [officeId])
+  date      DateTime
+  amount    Int
+  remarks   String?
+  status    String   @default("Pending")
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
@@ -301,8 +302,9 @@ model Bill {
 }
 
 model Item {
-  id    Int    @id @default(autoincrement())
-  label String @unique
+  id        Int     @id @default(autoincrement())
+  label     String  @unique
+  isService Boolean @default(false)
 
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

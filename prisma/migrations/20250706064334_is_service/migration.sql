@@ -1,0 +1,22 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- AlterTable
+ALTER TABLE [dbo].[bills] ADD [isService] BIT NOT NULL CONSTRAINT [bills_isService_df] DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE [dbo].[items] ADD [isService] BIT NOT NULL CONSTRAINT [items_isService_df] DEFAULT 0;
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

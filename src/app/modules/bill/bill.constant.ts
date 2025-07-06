@@ -7,4 +7,5 @@ export const billFilterableFields = [
   'startDate',
   'endDate',
   'status',
+  'isService',
 ];

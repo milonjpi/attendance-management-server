@@ -24,7 +24,7 @@ const getAll = async (
   filters: IItemFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<Item[]>> => {
-  const { searchTerm } = filters;
+  const { searchTerm, isService } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -37,6 +37,12 @@ const getAll = async (
           contains: searchTerm,
         },
       })),
+    });
+  }
+
+  if (isService) {
+    andConditions.push({
+      isService: isService === 'true' ? true : false,
     });
   }
 

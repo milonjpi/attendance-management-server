@@ -6,6 +6,7 @@ const create = z.object({
     date: z.string({ required_error: 'Date is required' }),
     amount: z.number({ required_error: 'Amount is Required' }),
     remarks: z.string().optional().nullable(),
+    isService: z.boolean().optional(),
     billDetails: z
       .object({
         itemId: z.number({ required_error: 'Item ID is Required' }),
@@ -26,6 +27,7 @@ const update = z.object({
     date: z.string().optional(),
     amount: z.number().optional(),
     remarks: z.string().optional().nullable(),
+    isService: z.boolean().optional(),
     billDetails: z
       .object({
         itemId: z.number({ required_error: 'Item ID is Required' }),

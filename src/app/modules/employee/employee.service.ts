@@ -1,4 +1,5 @@
 import httpStatus from 'http-status';
+import bcrypt from 'bcryptjs';
 import prisma from '../../../shared/prisma';
 import { Employee, Prisma, User } from '@prisma/client';
 import ApiError from '../../../errors/ApiError';
@@ -9,6 +10,7 @@ import { IEmployeeFilters } from './employee.interface';
 import { employeeSearchableFields } from './employee.constant';
 import path from 'path';
 import { unlinkSync } from 'fs';
+import config from '../../../config';
 
 // create Employee
 const createEmployee = async (data: Employee): Promise<Employee | null> => {
@@ -26,6 +28,12 @@ const createEmployee = async (data: Employee): Promise<Employee | null> => {
 
 // create user
 const createUser = async (data: User): Promise<User | null> => {
+  // hashing password
+  data.password = await bcrypt.hash(
+    data.password,
+    Number(config.bcrypt_salt_rounds)
+  );
+
   const result = await prisma.$transaction(async trans => {
     await trans.employee.update({
       where: { officeId: data.userName },

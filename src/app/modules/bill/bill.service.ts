@@ -29,7 +29,8 @@ const getAll = async (
   filters: IBillFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IBillResponse>> => {
-  const { searchTerm, officeId, startDate, endDate, status } = filters;
+  const { searchTerm, officeId, startDate, endDate, status, isService } =
+    filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -47,6 +48,12 @@ const getAll = async (
   if (officeId) {
     andConditions.push({
       officeId,
+    });
+  }
+
+  if (isService) {
+    andConditions.push({
+      isService: isService === 'true' ? true : false,
     });
   }
 
@@ -256,10 +263,20 @@ const deleteFromDB = async (id: number): Promise<Bill | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Bill Not Found');
   }
 
-  const result = await prisma.bill.delete({
-    where: {
-      id,
-    },
+  if (isExist.status !== 'Pending') {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'You Cant Delete after Approved/Rejected'
+    );
+  }
+
+  const result = await prisma.$transaction(async trans => {
+    await trans.bill.update({
+      where: { id },
+      data: { billDetails: { deleteMany: {} } },
+    });
+
+    return await trans.bill.delete({ where: { id } });
   });
 
   return result;
