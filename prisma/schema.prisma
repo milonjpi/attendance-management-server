@@ -133,15 +133,16 @@ model Employee {
   isOwn       Boolean @default(false)
   userCreated Boolean @default(false)
 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  authLogs    AuthLog[]
-  attendances Attendance[]
-  leaves      Leave[]
-  salaries    Salary[]
-  transfers   Transfer[]
-  conveyances Conveyance[]
-  bills       Bill[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  authLogs      AuthLog[]
+  attendances   Attendance[]
+  leaves        Leave[]
+  salaries      Salary[]
+  transfers     Transfer[]
+  conveyances   Conveyance[]
+  bills         Bill[]
+  monthSalaries MonthSalary[]
 
   @@map("employees")
 }
@@ -355,4 +356,28 @@ model BillDetail {
   updatedAt DateTime @updatedAt
 
   @@map("billDetails")
+}
+
+model MonthSalary {
+  id          Int      @id @default(autoincrement())
+  month       String
+  year        String
+  officeId    String
+  employee    Employee @relation(fields: [officeId], references: [officeId])
+  totalDays   Int
+  weekends    Int
+  workingDays Int
+  presents    Int
+  lateCounts  Int
+  leaves      Int
+  absents     Int
+  salary      Int
+  earnSalary  Int
+  deduction   Int
+  isAccepted  Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("monthSalaries")
 }
