@@ -234,27 +234,21 @@ model VehicleType {
   id    Int    @id @default(autoincrement())
   label String @unique
 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  conveyances Conveyance[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  conveyanceDetails ConveyanceDetail[]
 
   @@map("vehicleTypes")
 }
 
 model Conveyance {
-  id            Int         @id @default(autoincrement())
-  officeId      String
-  employee      Employee    @relation(fields: [officeId], references: [officeId])
-  date          DateTime
-  from          String
-  to            String
-  distance      Int         @default(0)
-  vehicleTypeId Int
-  vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id])
-  amount        Int
-  extraAmount   Int         @default(0)
-  remarks       String?
-  status        String      @default("Pending")
+  id       Int      @id @default(autoincrement())
+  officeId String
+  employee Employee @relation(fields: [officeId], references: [officeId])
+  date     DateTime
+  amount   Int
+  remarks  String?
+  status   String   @default("Pending")
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
@@ -267,14 +261,19 @@ model Conveyance {
 }
 
 model ConveyanceDetail {
-  id           Int        @id @default(autoincrement())
-  conveyanceId Int
-  conveyance   Conveyance @relation(fields: [conveyanceId], references: [id])
-  itemTypeId   Int
-  itemType     ItemType   @relation(fields: [itemTypeId], references: [id])
-  details      String?
-  amount       Int
-  remarks      String?
+  id            Int          @id @default(autoincrement())
+  conveyanceId  Int
+  conveyance    Conveyance   @relation(fields: [conveyanceId], references: [id])
+  itemTypeId    Int
+  itemType      ItemType     @relation(fields: [itemTypeId], references: [id])
+  from          String?
+  to            String?
+  distance      Int          @default(0)
+  vehicleTypeId Int?
+  vehicleType   VehicleType? @relation(fields: [vehicleTypeId], references: [id])
+  details       String?
+  amount        Int
+  remarks       String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

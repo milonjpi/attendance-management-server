@@ -11,7 +11,6 @@ export type IConveyanceFilters = {
 type ISum = {
   _sum: {
     amount: number | null;
-    extraAmount: number | null;
   };
 };
 

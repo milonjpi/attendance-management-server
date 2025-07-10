@@ -96,10 +96,10 @@ const getAll = async (
           },
         },
       },
-      vehicleType: true,
       conveyanceDetails: {
         include: {
           itemType: true,
+          vehicleType: true,
         },
       },
     },
@@ -114,7 +114,6 @@ const getAll = async (
     where: whereConditions,
     _sum: {
       amount: true,
-      extraAmount: true,
     },
   });
 
@@ -150,10 +149,10 @@ const getSingle = async (id: number): Promise<Conveyance | null> => {
           },
         },
       },
-      vehicleType: true,
       conveyanceDetails: {
         include: {
           itemType: true,
+          vehicleType: true,
         },
       },
     },
@@ -177,6 +176,14 @@ const updateSingle = async (
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Conveyance Not Found');
+  }
+
+  if (isExist.status === 'Approved') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Forbidden!! It is Approved');
+  }
+
+  if (isExist.status === 'Rejected') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Forbidden!! It is Rejected');
   }
 
   const result = await prisma.$transaction(async trans => {
@@ -265,11 +272,12 @@ const deleteFromDB = async (id: number): Promise<Conveyance | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Conveyance Not Found');
   }
 
-  if (isExist.status !== 'Pending') {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'You Cant Delete after Approved/Rejected'
-    );
+  if (isExist.status === 'Approved') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Forbidden!! It is Approved');
+  }
+
+  if (isExist.status === 'Rejected') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Forbidden!! It is Rejected');
   }
 
   const result = await prisma.$transaction(async trans => {
@@ -289,13 +297,13 @@ const getLocation = async (): Promise<string[]> => {
   const result = await prisma.$queryRaw<{ location: string }[]>`
   SELECT DISTINCT location FROM (
     SELECT [from] AS location 
-    FROM [conveyances] 
+    FROM [conveyanceDetails] 
     WHERE [from] IS NOT NULL AND [from] <> ''
     
     UNION
     
     SELECT [to] AS location 
-    FROM [conveyances] 
+    FROM [conveyanceDetails] 
     WHERE [to] IS NOT NULL AND [to] <> ''
   ) AS combined
 `;
