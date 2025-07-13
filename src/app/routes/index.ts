@@ -23,6 +23,8 @@ import { ItemRoutes } from '../modules/item/item.route';
 import { ShopRoutes } from '../modules/shop/shop.route';
 import { UomRoutes } from '../modules/uom/uom.route';
 import { BillRoutes } from '../modules/bill/bill.route';
+import { MonthSalaryRoutes } from '../modules/monthSalary/monthSalary.route';
+import { MonthSalaryDetailRoutes } from '../modules/monthSalaryDetail/monthSalaryDetail.route';
 
 const router = express.Router();
 
@@ -122,6 +124,14 @@ const moduleRoutes = [
   {
     path: '/bill',
     route: BillRoutes,
+  },
+  {
+    path: '/month-salary',
+    route: MonthSalaryRoutes,
+  },
+  {
+    path: '/month-salary-detail',
+    route: MonthSalaryDetailRoutes,
   },
 ];
 

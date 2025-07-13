@@ -100,11 +100,12 @@ model Location {
   lon     String?
   weekend String  @default("Friday")
 
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   employees     Employee[]
-  fromTransfers Transfer[] @relation("FromLocationName")
-  toTransfers   Transfer[] @relation("ToLocationName")
+  fromTransfers Transfer[]    @relation("FromLocationName")
+  toTransfers   Transfer[]    @relation("ToLocationName")
+  MonthSalary   MonthSalary[]
 
   @@map("locations")
 }
@@ -133,16 +134,16 @@ model Employee {
   isOwn       Boolean @default(false)
   userCreated Boolean @default(false)
 
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  authLogs      AuthLog[]
-  attendances   Attendance[]
-  leaves        Leave[]
-  salaries      Salary[]
-  transfers     Transfer[]
-  conveyances   Conveyance[]
-  bills         Bill[]
-  monthSalaries MonthSalary[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  authLogs           AuthLog[]
+  attendances        Attendance[]
+  leaves             Leave[]
+  salaries           Salary[]
+  transfers          Transfer[]
+  conveyances        Conveyance[]
+  bills              Bill[]
+  monthSalaryDetails MonthSalaryDetail[]
 
   @@map("employees")
 }
@@ -358,25 +359,40 @@ model BillDetail {
 }
 
 model MonthSalary {
-  id          Int      @id @default(autoincrement())
-  month       String
-  year        String
-  officeId    String
-  employee    Employee @relation(fields: [officeId], references: [officeId])
-  totalDays   Int
-  weekends    Int
-  workingDays Int
-  presents    Int
-  lateCounts  Int
-  leaves      Int
-  absents     Int
-  salary      Int
-  earnSalary  Int
-  deduction   Int
-  isAccepted  Boolean  @default(false)
+  id         Int      @id @default(autoincrement())
+  month      String
+  year       String
+  locationId Int
+  location   Location @relation(fields: [locationId], references: [id])
+
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  monthSalaryDetails MonthSalaryDetail[]
+
+  @@unique([month, year, locationId])
+  @@map("monthSalaries")
+}
+
+model MonthSalaryDetail {
+  id            Int         @id @default(autoincrement())
+  monthSalaryId Int
+  monthSalary   MonthSalary @relation(fields: [monthSalaryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  officeId      String
+  employee      Employee    @relation(fields: [officeId], references: [officeId])
+  totalDays     Int
+  weekends      Int
+  workingDays   Int
+  presents      Int
+  lateCounts    Int
+  leaves        Int
+  absents       Int
+  salary        Int
+  earnSalary    Int
+  deduction     Int
+  isAccepted    Boolean     @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("monthSalaries")
+  @@map("monthSalaryDetails")
 }
