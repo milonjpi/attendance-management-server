@@ -106,6 +106,7 @@ model Location {
   fromTransfers Transfer[]    @relation("FromLocationName")
   toTransfers   Transfer[]    @relation("ToLocationName")
   MonthSalary   MonthSalary[]
+  bills         Bill[]
 
   @@map("locations")
 }
@@ -283,14 +284,16 @@ model ConveyanceDetail {
 }
 
 model Bill {
-  id        Int      @id @default(autoincrement())
-  isService Boolean  @default(false)
-  officeId  String
-  employee  Employee @relation(fields: [officeId], references: [officeId])
-  date      DateTime
-  amount    Int
-  remarks   String?
-  status    String   @default("Pending")
+  id         Int       @id @default(autoincrement())
+  isService  Boolean   @default(false)
+  locationId Int?
+  location   Location? @relation(fields: [locationId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  officeId   String
+  employee   Employee  @relation(fields: [officeId], references: [officeId])
+  date       DateTime
+  amount     Int
+  remarks    String?
+  status     String    @default("Pending")
 
   userId Int
   user   User @relation(fields: [userId], references: [id])

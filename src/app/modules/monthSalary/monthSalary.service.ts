@@ -255,10 +255,18 @@ const deleteFromDB = async (id: number): Promise<MonthSalary | null> => {
     where: {
       id,
     },
+    include: {
+      monthSalaryDetails: true,
+    },
   });
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Month Salary Not Found');
+  }
+  const findAcceptance = isExist.monthSalaryDetails?.find(el => el.isAccepted);
+
+  if (findAcceptance) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Some one Received the Salary');
   }
 
   const result = await prisma.$transaction(async trans => {

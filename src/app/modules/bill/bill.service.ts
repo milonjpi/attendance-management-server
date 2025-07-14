@@ -29,8 +29,15 @@ const getAll = async (
   filters: IBillFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IBillResponse>> => {
-  const { searchTerm, officeId, startDate, endDate, status, isService } =
-    filters;
+  const {
+    searchTerm,
+    locationId,
+    officeId,
+    startDate,
+    endDate,
+    status,
+    isService,
+  } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -43,6 +50,11 @@ const getAll = async (
           contains: searchTerm,
         },
       })),
+    });
+  }
+  if (locationId) {
+    andConditions.push({
+      locationId: Number(locationId),
     });
   }
   if (officeId) {
@@ -89,15 +101,15 @@ const getAll = async (
     skip,
     take: limit,
     include: {
+      location: {
+        include: {
+          area: true,
+        },
+      },
       employee: {
         include: {
           designation: true,
           department: true,
-          location: {
-            include: {
-              area: true,
-            },
-          },
         },
       },
       billDetails: {

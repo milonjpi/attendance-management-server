@@ -2,6 +2,7 @@ import { Bill } from '@prisma/client';
 
 export type IBillFilters = {
   searchTerm?: string;
+  locationId?: string;
   officeId?: string;
   startDate?: string;
   endDate?: string;
