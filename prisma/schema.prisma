@@ -377,22 +377,23 @@ model MonthSalary {
 }
 
 model MonthSalaryDetail {
-  id            Int         @id @default(autoincrement())
-  monthSalaryId Int
-  monthSalary   MonthSalary @relation(fields: [monthSalaryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  officeId      String
-  employee      Employee    @relation(fields: [officeId], references: [officeId])
-  totalDays     Int
-  weekends      Int
-  workingDays   Int
-  presents      Int
-  lateCounts    Int
-  leaves        Int
-  absents       Int
-  salary        Int
-  earnSalary    Int
-  deduction     Int
-  isAccepted    Boolean     @default(false)
+  id             Int         @id @default(autoincrement())
+  monthSalaryId  Int
+  monthSalary    MonthSalary @relation(fields: [monthSalaryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  officeId       String
+  employee       Employee    @relation(fields: [officeId], references: [officeId])
+  totalDays      Int
+  weekends       Int
+  workingDays    Int
+  actualPresents Int
+  presents       Int
+  lateCounts     Int
+  leaves         Int
+  absents        Int
+  salary         Int
+  earnSalary     Int
+  deduction      Int
+  isAccepted     Boolean     @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

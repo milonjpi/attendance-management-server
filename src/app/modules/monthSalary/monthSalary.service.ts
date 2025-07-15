@@ -30,11 +30,23 @@ const insertIntoDB = async (data: MonthSalary): Promise<MonthSalary | null> => {
   });
 
   andConditions.push({
-    isActive: true,
+    isOwn: false,
   });
 
   andConditions.push({
-    isOwn: false,
+    OR: [
+      { isActive: true },
+      {
+        resignDate: {
+          gte: new Date(`${startDate}, 00:00:00`),
+        },
+      },
+      {
+        resignDate: {
+          lte: new Date(`${endDate}, 23:59:59`),
+        },
+      },
+    ],
   });
 
   const whereConditions: Prisma.EmployeeWhereInput =
@@ -99,33 +111,41 @@ const insertIntoDB = async (data: MonthSalary): Promise<MonthSalary | null> => {
 
   const mappedResult = employees?.map(el => {
     // off day count
-    let monthDays = 0;
     let totalDays = 0;
     let weekends = 0;
+    let actualWeekends = 0;
+    let workingDays = 0;
 
-    monthDays = countTotalDaysBetween(
-      startDate,
-      moment(startDate).endOf('month').format('YYYY-MM-DD')
-    );
     totalDays = countTotalDaysBetween(startDate, endDate);
-    weekends = countDaysBetween(
-      startDate,
-      moment(startDate).endOf('month').format('YYYY-MM-DD'),
+    weekends = countDaysBetween(startDate, endDate, el.location.weekend);
+    actualWeekends = countDaysBetween(
+      moment(el.joiningDate).format('YYYYMM') ===
+        moment(startDate).format('YYYYMM')
+        ? moment(el.joiningDate).format('YYYY-MM-DD')
+        : startDate,
+      !el.isActive &&
+        el.resignDate &&
+        moment(el.resignDate).format('YYYYMM') ===
+          moment(startDate).format('YYYYMM')
+        ? moment(el.resignDate).format('YYYY-MM-DD')
+        : endDate,
       el.location.weekend
     );
 
-    const workingDay =
-      el.joiningDate &&
-      endDate &&
+    workingDays = countTotalDaysBetween(
       moment(el.joiningDate).format('YYYYMM') ===
         moment(startDate).format('YYYYMM')
-        ? countTotalDaysBetween(
-            moment(el.joiningDate).format('YYYY-MM-DD'),
-            endDate
-          )
-        : totalDays;
+        ? moment(el.joiningDate).format('YYYY-MM-DD')
+        : startDate,
+      !el.isActive &&
+        el.resignDate &&
+        moment(el.resignDate).format('YYYYMM') ===
+          moment(startDate).format('YYYYMM')
+        ? moment(el.resignDate).format('YYYY-MM-DD')
+        : endDate
+    );
 
-    const absentDay = monthDays - workingDay;
+    const absents = totalDays - workingDays;
 
     const presents = el.attendances?.length || 0;
     const leaves = el.leaves?.length || 0;
@@ -141,20 +161,21 @@ const insertIntoDB = async (data: MonthSalary): Promise<MonthSalary | null> => {
     );
 
     const totalSalary = Math.round(
-      ((findSalary?.salary || 0) / monthDays) * workingDay
+      ((findSalary?.salary || 0) / totalDays) * workingDays
     );
     const totalDeduction = Math.round(
-      ((findSalary?.salary || 0) / monthDays) * absentDay
+      ((findSalary?.salary || 0) / totalDays) * absents
     );
     return {
       officeId: el.officeId,
-      totalDays: monthDays,
+      totalDays,
       weekends,
-      workingDays: workingDay,
-      presents,
+      workingDays,
+      actualPresents: presents,
+      presents: workingDays - actualWeekends,
       lateCounts: 0,
       leaves,
-      absents: monthDays - workingDay,
+      absents,
       salary: findSalary?.salary || 0,
       earnSalary: totalSalary,
       deduction: totalDeduction,
