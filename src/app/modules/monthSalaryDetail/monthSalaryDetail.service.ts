@@ -56,6 +56,17 @@ const getAll = async (
           },
         },
       },
+      employee: {
+        include: {
+          designation: true,
+          department: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -86,6 +97,10 @@ const receiveSalary = async (id: number): Promise<MonthSalaryDetail | null> => {
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Salary Not Found');
+  }
+
+  if (isExist.isAccepted) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Already Received');
   }
 
   const result = await prisma.monthSalaryDetail.update({

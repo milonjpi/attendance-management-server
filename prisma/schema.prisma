@@ -131,6 +131,7 @@ model Employee {
   address   String?
 
   photo       String?
+  signature   String?
   isActive    Boolean @default(true)
   isOwn       Boolean @default(false)
   userCreated Boolean @default(false)

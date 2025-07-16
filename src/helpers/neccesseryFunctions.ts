@@ -1,3 +1,4 @@
+import { Attendance } from '@prisma/client';
 import moment from 'moment';
 
 export const countFridaysBetween = (
@@ -63,4 +64,23 @@ export const countTotalDaysBetween = (
 
   // Add 1 to include both start and end dates in the count
   return Math.floor(diffInMs / msInOneDay) + 1;
+};
+
+export const countLate = (attendances: Attendance[]): number => {
+  let count = 0;
+
+  for (let index = 0; index < attendances?.length; index++) {
+    const element = attendances[index];
+
+    if (element?.inTime) {
+      if (parseInt(moment(element.inTime).format('HHmm')) > 1030) {
+        count = count + 1;
+      }
+    } else {
+      count = count + 1;
+    }
+  }
+
+  // Add 1 to include both start and end dates in the count
+  return count;
 };

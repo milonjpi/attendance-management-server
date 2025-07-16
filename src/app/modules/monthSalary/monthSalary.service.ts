@@ -9,6 +9,7 @@ import { IMonthSalaryFilters } from './monthSalary.interface';
 import moment from 'moment';
 import {
   countDaysBetween,
+  countLate,
   countTotalDaysBetween,
 } from '../../../helpers/neccesseryFunctions';
 
@@ -150,6 +151,8 @@ const insertIntoDB = async (data: MonthSalary): Promise<MonthSalary | null> => {
     const presents = el.attendances?.length || 0;
     const leaves = el.leaves?.length || 0;
 
+    const lateCounts = countLate(el.attendances || []);
+
     const findSalary = el.salaries?.find(
       bl =>
         parseInt(moment(startDate).format('YYYYMMDD')) >=
@@ -173,7 +176,7 @@ const insertIntoDB = async (data: MonthSalary): Promise<MonthSalary | null> => {
       workingDays,
       actualPresents: presents,
       presents: workingDays - actualWeekends,
-      lateCounts: 0,
+      lateCounts,
       leaves,
       absents,
       salary: findSalary?.salary || 0,
@@ -246,6 +249,11 @@ const getAll = async (
             include: {
               designation: true,
               department: true,
+              location: {
+                include: {
+                  area: true,
+                },
+              },
             },
           },
         },

@@ -12,6 +12,7 @@ const create = z.object({
     contactNo: z.string().optional().nullable(),
     address: z.string().optional().nullable(),
     photo: z.string().optional().nullable(),
+    signature: z.string().optional().nullable(),
     isOwn: z.boolean().optional(),
   }),
 });
@@ -28,6 +29,7 @@ const update = z.object({
     contactNo: z.string().optional().nullable(),
     address: z.string().optional().nullable(),
     photo: z.string().optional().nullable(),
+    signature: z.string().optional().nullable(),
     isActive: z.boolean().optional(),
     isOwn: z.boolean().optional(),
   }),
