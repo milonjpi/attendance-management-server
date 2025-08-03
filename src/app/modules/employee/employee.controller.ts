@@ -99,6 +99,26 @@ const updateEmployee = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// update additional location
+const updateAdditionalLocation = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    const { employeeLocations } = req.body;
+
+    const result = await EmployeeService.updateAdditionalLocation(
+      id,
+      employeeLocations
+    );
+
+    sendResponse<Employee>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Location Updated successfully',
+      data: result,
+    });
+  }
+);
+
 export const EmployeeController = {
   createEmployee,
   createUser,
@@ -106,4 +126,5 @@ export const EmployeeController = {
   getSingleEmployee,
   getSingleUserEmployee,
   updateEmployee,
+  updateAdditionalLocation,
 };

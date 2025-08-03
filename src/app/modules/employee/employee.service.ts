@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import bcrypt from 'bcryptjs';
 import prisma from '../../../shared/prisma';
-import { Employee, Prisma, User } from '@prisma/client';
+import { Employee, EmployeeLocation, Prisma, User } from '@prisma/client';
 import ApiError from '../../../errors/ApiError';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
@@ -104,6 +104,15 @@ const getAllEmployees = async (
           area: true,
         },
       },
+      employeeLocations: {
+        include: {
+          location: {
+            include: {
+              area: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -137,6 +146,15 @@ const getSingleEmployee = async (id: number): Promise<Employee | null> => {
           area: true,
         },
       },
+      employeeLocations: {
+        include: {
+          location: {
+            include: {
+              area: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -157,6 +175,15 @@ const getSingleUserEmployee = async (
       location: {
         include: {
           area: true,
+        },
+      },
+      employeeLocations: {
+        include: {
+          location: {
+            include: {
+              area: true,
+            },
+          },
         },
       },
     },
@@ -208,6 +235,36 @@ const updateEmployee = async (
   return result;
 };
 
+// update additional location
+const updateAdditionalLocation = async (
+  id: number,
+  data: EmployeeLocation[]
+): Promise<Employee | null> => {
+  // check is exist
+  const isExist = await prisma.employee.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Employee Not Found');
+  }
+
+  const result = await prisma.$transaction(async trans => {
+    await trans.employee.update({
+      where: { id },
+      data: { employeeLocations: { deleteMany: {} } },
+    });
+    return await trans.employee.update({
+      where: { id },
+      data: { employeeLocations: { createMany: { data: data } } },
+    });
+  });
+
+  return result;
+};
+
 export const EmployeeService = {
   createEmployee,
   createUser,
@@ -215,4 +272,5 @@ export const EmployeeService = {
   getSingleEmployee,
   getSingleUserEmployee,
   updateEmployee,
+  updateAdditionalLocation,
 };
