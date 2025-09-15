@@ -466,20 +466,36 @@ const expenseSummaryByMonth = async (
 ): Promise<IExpenseSummaryMonthResponse[]> => {
   const { year, locationId } = filters;
 
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  const months =
+    year === moment().format('YYYY')
+      ? [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
+        ].slice(0, Number(moment().format('MM')))
+      : [
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December',
+        ];
 
   const locationFilter = locationId ? { id: Number(locationId) } : {};
 
