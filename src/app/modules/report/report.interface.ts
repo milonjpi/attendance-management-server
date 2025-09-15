@@ -1,3 +1,5 @@
+import { Location } from '@prisma/client';
+
 export type IEmployeeReportFilters = {
   searchTerm?: string;
   employeeId?: string;
@@ -26,4 +28,41 @@ export type IEmployeeSalary = {
   salary: number;
   earnSalary: number;
   deduction: number;
+};
+
+export type IExpenseSummaryFilter = {
+  startDate?: string;
+  endDate?: string;
+  month?: string;
+  year?: string;
+  locationId?: string;
+};
+
+export type IExpenseSummaryResponse = {
+  location: Location;
+  conveyances: number;
+  bills: number;
+  salaries: number;
+  totalExpenses: number;
+};
+
+export type IExpenseSummaryYearResponse = {
+  month: string;
+  conveyances: number;
+  bills: number;
+  salaries: number;
+  totalExpenses: number;
+};
+
+export type IExpenseSummaryLocation = {
+  location: Location;
+  conveyances: number;
+  bills: number;
+  salaries: number;
+  totalExpenses: number;
+};
+
+export type IExpenseSummaryMonthResponse = {
+  month: string;
+  locations: IExpenseSummaryLocation[];
 };

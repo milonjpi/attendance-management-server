@@ -1,13 +1,21 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
-import { employeeReportFilterableFields } from './report.constant';
+import {
+  employeeReportFilterableFields,
+  expenseSummaryFilterableFields,
+} from './report.constant';
 import { paginationFields } from '../../../constants/pagination';
 import { ReportService } from './report.service';
 import sendResponse from '../../../shared/sendResponse';
 import { Employee } from '@prisma/client';
 import httpStatus from 'http-status';
-import { IEmployeeSalary } from './report.interface';
+import {
+  IEmployeeSalary,
+  IExpenseSummaryMonthResponse,
+  IExpenseSummaryResponse,
+  IExpenseSummaryYearResponse,
+} from './report.interface';
 
 // get all Employees
 const getEmployeesReport = catchAsync(async (req: Request, res: Response) => {
@@ -42,7 +50,54 @@ const getSalaryReport = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// get expense summary
+const expenseSummary = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, expenseSummaryFilterableFields);
+
+  const result = await ReportService.expenseSummary(filters);
+
+  sendResponse<IExpenseSummaryResponse[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Expense summary retrieved successfully',
+    data: result,
+  });
+});
+
+// get expense summary by year
+const expenseSummaryByYear = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, expenseSummaryFilterableFields);
+
+  const result = await ReportService.expenseSummaryByYear(filters);
+
+  sendResponse<IExpenseSummaryYearResponse[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Expense summary retrieved successfully',
+    data: result,
+  });
+});
+
+// get expense summary by month
+const expenseSummaryByMonth = catchAsync(
+  async (req: Request, res: Response) => {
+    const filters = pick(req.query, expenseSummaryFilterableFields);
+
+    const result = await ReportService.expenseSummaryByMonth(filters);
+
+    sendResponse<IExpenseSummaryMonthResponse[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Expense summary retrieved successfully',
+      data: result,
+    });
+  }
+);
+
 export const ReportController = {
   getEmployeesReport,
   getSalaryReport,
+  expenseSummary,
+  expenseSummaryByYear,
+  expenseSummaryByMonth,
 };

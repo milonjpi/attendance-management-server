@@ -4,8 +4,11 @@ export type IBillFilters = {
   searchTerm?: string;
   locationId?: string;
   officeId?: string;
+  approverId?: string;
   startDate?: string;
   endDate?: string;
+  month?: string;
+  year?: string;
   status?: string;
   isService?: string;
 };

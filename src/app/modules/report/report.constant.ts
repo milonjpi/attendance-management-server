@@ -17,3 +17,12 @@ export const employeeReportFilterableFields = [
   'isActive',
   'isOwn',
 ];
+
+
+export const expenseSummaryFilterableFields = [
+  'startDate',
+  'endDate',
+  'month',
+  'year',
+  'locationId',
+];

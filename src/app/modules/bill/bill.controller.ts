@@ -76,8 +76,9 @@ const updateSingle = catchAsync(async (req: Request, res: Response) => {
 // approve
 const approveSingle = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
+  const data = req.body;
 
-  const result = await BillService.approveSingle(id);
+  const result = await BillService.approveSingle(id, data);
 
   sendResponse<Bill>(res, {
     statusCode: httpStatus.OK,
@@ -90,8 +91,9 @@ const approveSingle = catchAsync(async (req: Request, res: Response) => {
 // reject
 const rejectSingle = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
+  const data = req.body;
 
-  const result = await BillService.rejectSingle(id);
+  const result = await BillService.rejectSingle(id, data);
 
   sendResponse<Bill>(res, {
     statusCode: httpStatus.OK,

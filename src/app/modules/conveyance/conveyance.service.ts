@@ -32,7 +32,14 @@ const getAll = async (
   filters: IConveyanceFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IConveyanceResponse>> => {
-  const { searchTerm, officeId, startDate, endDate, status } = filters;
+  const {
+    searchTerm,
+    locationId,
+    approverId,
+    startDate,
+    endDate,
+    ...filterData
+  } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -47,9 +54,16 @@ const getAll = async (
       })),
     });
   }
-  if (officeId) {
+
+  if (locationId) {
     andConditions.push({
-      officeId,
+      locationId: Number(locationId),
+    });
+  }
+
+  if (approverId) {
+    andConditions.push({
+      approverId: Number(approverId),
     });
   }
 
@@ -68,9 +82,11 @@ const getAll = async (
     });
   }
 
-  if (status) {
+  if (Object.keys(filterData).length > 0) {
     andConditions.push({
-      status: status,
+      AND: Object.entries(filterData).map(([field, value]) => ({
+        [field]: value,
+      })),
     });
   }
 
@@ -86,6 +102,22 @@ const getAll = async (
     take: limit,
     include: {
       employee: {
+        include: {
+          designation: true,
+          department: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
+        },
+      },
+      location: {
+        include: {
+          area: true,
+        },
+      },
+      approvedBy: {
         include: {
           designation: true,
           department: true,
@@ -149,6 +181,22 @@ const getSingle = async (id: number): Promise<Conveyance | null> => {
           },
         },
       },
+      location: {
+        include: {
+          area: true,
+        },
+      },
+      approvedBy: {
+        include: {
+          designation: true,
+          department: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
+        },
+      },
       conveyanceDetails: {
         include: {
           itemType: true,
@@ -202,7 +250,10 @@ const updateSingle = async (
 };
 
 // approve
-const approveSingle = async (id: number): Promise<Conveyance | null> => {
+const approveSingle = async (
+  id: number,
+  data: Partial<Conveyance>
+): Promise<Conveyance | null> => {
   // check is exist
   const isExist = await prisma.conveyance.findFirst({
     where: {
@@ -224,14 +275,21 @@ const approveSingle = async (id: number): Promise<Conveyance | null> => {
 
   const result = await prisma.conveyance.update({
     where: { id },
-    data: { status: 'Approved' },
+    data: {
+      status: 'Approved',
+      approverId: data.approverId,
+      approvedTime: data.approvedTime,
+    },
   });
 
   return result;
 };
 
 // Reject
-const rejectSingle = async (id: number): Promise<Conveyance | null> => {
+const rejectSingle = async (
+  id: number,
+  data: Partial<Conveyance>
+): Promise<Conveyance | null> => {
   // check is exist
   const isExist = await prisma.conveyance.findFirst({
     where: {
@@ -253,7 +311,11 @@ const rejectSingle = async (id: number): Promise<Conveyance | null> => {
 
   const result = await prisma.conveyance.update({
     where: { id },
-    data: { status: 'Rejected' },
+    data: {
+      status: 'Rejected',
+      approverId: data.approverId,
+      approvedTime: data.approvedTime,
+    },
   });
 
   return result;

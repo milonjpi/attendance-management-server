@@ -16,5 +16,23 @@ router.get(
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   ReportController.getSalaryReport
 );
+// expense summary
+router.get(
+  '/expense-summary',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  ReportController.expenseSummary
+);
+// expense summary year
+router.get(
+  '/expense-summary-year',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  ReportController.expenseSummaryByYear
+);
+// expense summary month
+router.get(
+  '/expense-summary-month',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  ReportController.expenseSummaryByMonth
+);
 
 export const ReportRoutes = router;

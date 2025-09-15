@@ -80,8 +80,9 @@ const updateSingle = catchAsync(async (req: Request, res: Response) => {
 // approve
 const approveSingle = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
+  const data = req.body;
 
-  const result = await ConveyanceService.approveSingle(id);
+  const result = await ConveyanceService.approveSingle(id, data);
 
   sendResponse<Conveyance>(res, {
     statusCode: httpStatus.OK,
@@ -94,8 +95,9 @@ const approveSingle = catchAsync(async (req: Request, res: Response) => {
 // reject
 const rejectSingle = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
+  const data = req.body;
 
-  const result = await ConveyanceService.rejectSingle(id);
+  const result = await ConveyanceService.rejectSingle(id, data);
 
   sendResponse<Conveyance>(res, {
     statusCode: httpStatus.OK,

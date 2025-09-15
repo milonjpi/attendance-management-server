@@ -3,7 +3,14 @@ import { Employee, Prisma } from '@prisma/client';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
-import { IEmployeeReportFilters, IEmployeeSalary } from './report.interface';
+import {
+  IEmployeeReportFilters,
+  IEmployeeSalary,
+  IExpenseSummaryFilter,
+  IExpenseSummaryMonthResponse,
+  IExpenseSummaryResponse,
+  IExpenseSummaryYearResponse,
+} from './report.interface';
 import { employeeReportSearchableFields } from './report.constant';
 import moment from 'moment';
 import {
@@ -162,7 +169,7 @@ const getSalaryReport = async (
 
     leaveConditions.push({
       fromDate: {
-        gte: new Date(`${startDate}, 00:00:00`),
+        lte: new Date(`${endDate}, 23:59:59`),
       },
     });
   }
@@ -285,7 +292,271 @@ const getSalaryReport = async (
   return mappedResult;
 };
 
+const expenseSummary = async (
+  filters: IExpenseSummaryFilter
+): Promise<IExpenseSummaryResponse[]> => {
+  const { month, year, locationId } = filters;
+
+  const locations = await prisma.location.findMany({
+    where: locationId ? { id: Number(locationId) } : {},
+    include: { area: true },
+  });
+
+  const results = await Promise.all(
+    locations.map(async location => {
+      const { id: locationId } = location;
+
+      const conveyanceWhere: Prisma.ConveyanceWhereInput = {
+        AND: [
+          ...(month ? [{ month }] : []),
+          ...(year ? [{ year }] : []),
+          { locationId },
+        ],
+      };
+
+      const billWhere: Prisma.BillWhereInput = {
+        AND: [
+          ...(month ? [{ month }] : []),
+          ...(year ? [{ year }] : []),
+          { locationId },
+        ],
+      };
+
+      const salaryWhere: Prisma.MonthSalaryDetailWhereInput = {
+        AND: [
+          {
+            monthSalary: {
+              ...(month ? { month } : {}),
+              ...(year ? { year } : {}),
+              locationId,
+            },
+          },
+        ],
+      };
+
+      const [conveyances, bills, salaries] = await Promise.all([
+        prisma.conveyance.aggregate({
+          where: conveyanceWhere,
+          _sum: { amount: true },
+        }),
+        prisma.bill.aggregate({
+          where: billWhere,
+          _sum: { amount: true },
+        }),
+        prisma.monthSalaryDetail.aggregate({
+          where: salaryWhere,
+          _sum: { earnSalary: true },
+        }),
+      ]);
+
+      const conveyanceTotal = conveyances._sum.amount || 0;
+      const billTotal = bills._sum.amount || 0;
+      const salaryTotal = salaries._sum.earnSalary || 0;
+
+      return {
+        location,
+        conveyances: conveyanceTotal,
+        bills: billTotal,
+        salaries: salaryTotal,
+        totalExpenses: conveyanceTotal + billTotal + salaryTotal,
+      };
+    })
+  );
+
+  return results;
+};
+
+const expenseSummaryByYear = async (
+  filters: IExpenseSummaryFilter
+): Promise<IExpenseSummaryYearResponse[]> => {
+  const { year, locationId } = filters;
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const locationFilter = locationId ? { id: Number(locationId) } : {};
+
+  const locations = await prisma.location.findMany({
+    where: locationFilter,
+  });
+
+  const locationIds = locations.map(loc => loc.id);
+
+  const results: IExpenseSummaryYearResponse[] = [];
+
+  for (const month of months) {
+    const conveyanceWhere: Prisma.ConveyanceWhereInput = {
+      AND: [
+        { month },
+        ...(year ? [{ year }] : []),
+        locationId
+          ? { locationId: Number(locationId) }
+          : { locationId: { in: locationIds } },
+      ],
+    };
+
+    const billWhere: Prisma.BillWhereInput = {
+      AND: [
+        { month },
+        ...(year ? [{ year }] : []),
+        locationId
+          ? { locationId: Number(locationId) }
+          : { locationId: { in: locationIds } },
+      ],
+    };
+
+    const salaryWhere: Prisma.MonthSalaryDetailWhereInput = {
+      AND: [
+        {
+          monthSalary: {
+            month,
+            ...(year ? { year } : {}),
+            ...(locationId
+              ? { locationId: Number(locationId) }
+              : { locationId: { in: locationIds } }),
+          },
+        },
+      ],
+    };
+
+    const [conveyances, bills, salaries] = await Promise.all([
+      prisma.conveyance.aggregate({
+        where: conveyanceWhere,
+        _sum: { amount: true },
+      }),
+      prisma.bill.aggregate({
+        where: billWhere,
+        _sum: { amount: true },
+      }),
+      prisma.monthSalaryDetail.aggregate({
+        where: salaryWhere,
+        _sum: { earnSalary: true },
+      }),
+    ]);
+
+    const conveyanceTotal = conveyances._sum.amount || 0;
+    const billTotal = bills._sum.amount || 0;
+    const salaryTotal = salaries._sum.earnSalary || 0;
+
+    results.push({
+      month,
+      conveyances: conveyanceTotal,
+      bills: billTotal,
+      salaries: salaryTotal,
+      totalExpenses: conveyanceTotal + billTotal + salaryTotal,
+    });
+  }
+
+  return results;
+};
+
+const expenseSummaryByMonth = async (
+  filters: IExpenseSummaryFilter
+): Promise<IExpenseSummaryMonthResponse[]> => {
+  const { year, locationId } = filters;
+
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const locationFilter = locationId ? { id: Number(locationId) } : {};
+
+  const locations = await prisma.location.findMany({
+    where: locationFilter,
+    include: { area: true }, // Include area or any relation if needed
+  });
+
+  const results: IExpenseSummaryMonthResponse[] = [];
+
+  for (const month of months) {
+    const locationSummaries = await Promise.all(
+      locations.map(async location => {
+        const locId = location.id;
+
+        const conveyanceWhere: Prisma.ConveyanceWhereInput = {
+          AND: [{ month }, ...(year ? [{ year }] : []), { locationId: locId }],
+        };
+
+        const billWhere: Prisma.BillWhereInput = {
+          AND: [{ month }, ...(year ? [{ year }] : []), { locationId: locId }],
+        };
+
+        const salaryWhere: Prisma.MonthSalaryDetailWhereInput = {
+          AND: [
+            {
+              monthSalary: {
+                month,
+                ...(year ? { year } : {}),
+                locationId: locId,
+              },
+            },
+          ],
+        };
+
+        const [conveyances, bills, salaries] = await Promise.all([
+          prisma.conveyance.aggregate({
+            where: conveyanceWhere,
+            _sum: { amount: true },
+          }),
+          prisma.bill.aggregate({
+            where: billWhere,
+            _sum: { amount: true },
+          }),
+          prisma.monthSalaryDetail.aggregate({
+            where: salaryWhere,
+            _sum: { earnSalary: true },
+          }),
+        ]);
+
+        const conveyanceTotal = conveyances._sum.amount || 0;
+        const billTotal = bills._sum.amount || 0;
+        const salaryTotal = salaries._sum.earnSalary || 0;
+
+        return {
+          location,
+          conveyances: conveyanceTotal,
+          bills: billTotal,
+          salaries: salaryTotal,
+          totalExpenses: conveyanceTotal + billTotal + salaryTotal,
+        };
+      })
+    );
+
+    results.push({
+      month,
+      locations: locationSummaries,
+    });
+  }
+
+  return results;
+};
+
 export const ReportService = {
   getEmployeesReport,
   getSalaryReport,
+  expenseSummary,
+  expenseSummaryByYear,
+  expenseSummaryByMonth,
 };

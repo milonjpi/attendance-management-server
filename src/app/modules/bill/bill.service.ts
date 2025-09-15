@@ -32,11 +32,11 @@ const getAll = async (
   const {
     searchTerm,
     locationId,
-    officeId,
+    approverId,
     startDate,
     endDate,
-    status,
     isService,
+    ...filterData
   } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
@@ -57,9 +57,10 @@ const getAll = async (
       locationId: Number(locationId),
     });
   }
-  if (officeId) {
+
+  if (approverId) {
     andConditions.push({
-      officeId,
+      approverId: Number(approverId),
     });
   }
 
@@ -84,9 +85,11 @@ const getAll = async (
     });
   }
 
-  if (status) {
+  if (Object.keys(filterData).length > 0) {
     andConditions.push({
-      status: status,
+      AND: Object.entries(filterData).map(([field, value]) => ({
+        [field]: value,
+      })),
     });
   }
 
@@ -107,6 +110,12 @@ const getAll = async (
         },
       },
       employee: {
+        include: {
+          designation: true,
+          department: true,
+        },
+      },
+      approvedBy: {
         include: {
           designation: true,
           department: true,
@@ -166,6 +175,17 @@ const getSingle = async (id: number): Promise<Bill | null> => {
           },
         },
       },
+      approvedBy: {
+        include: {
+          designation: true,
+          department: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -205,7 +225,10 @@ const updateSingle = async (
 };
 
 // approve
-const approveSingle = async (id: number): Promise<Bill | null> => {
+const approveSingle = async (
+  id: number,
+  data: Partial<Bill>
+): Promise<Bill | null> => {
   // check is exist
   const isExist = await prisma.bill.findFirst({
     where: {
@@ -227,14 +250,21 @@ const approveSingle = async (id: number): Promise<Bill | null> => {
 
   const result = await prisma.bill.update({
     where: { id },
-    data: { status: 'Approved' },
+    data: {
+      status: 'Approved',
+      approverId: data.approverId,
+      approvedTime: data.approvedTime,
+    },
   });
 
   return result;
 };
 
 // Reject
-const rejectSingle = async (id: number): Promise<Bill | null> => {
+const rejectSingle = async (
+  id: number,
+  data: Partial<Bill>
+): Promise<Bill | null> => {
   // check is exist
   const isExist = await prisma.bill.findFirst({
     where: {
@@ -256,7 +286,11 @@ const rejectSingle = async (id: number): Promise<Bill | null> => {
 
   const result = await prisma.bill.update({
     where: { id },
-    data: { status: 'Rejected' },
+    data: {
+      status: 'Rejected',
+      approverId: data.approverId,
+      approvedTime: data.approvedTime,
+    },
   });
 
   return result;

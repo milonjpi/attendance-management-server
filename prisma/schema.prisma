@@ -108,6 +108,7 @@ model Location {
   MonthSalary       MonthSalary[]
   bills             Bill[]
   employeeLocations EmployeeLocation[]
+  conveyances       Conveyance[]
 
   @@map("locations")
 }
@@ -137,17 +138,19 @@ model Employee {
   isOwn       Boolean @default(false)
   userCreated Boolean @default(false)
 
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  authLogs           AuthLog[]
-  attendances        Attendance[]
-  leaves             Leave[]
-  salaries           Salary[]
-  transfers          Transfer[]
-  conveyances        Conveyance[]
-  bills              Bill[]
-  monthSalaryDetails MonthSalaryDetail[]
-  employeeLocations  EmployeeLocation[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  authLogs            AuthLog[]
+  attendances         Attendance[]
+  leaves              Leave[]
+  salaries            Salary[]
+  transfers           Transfer[]
+  conveyances         Conveyance[]        @relation("ConveyanceCreator")
+  approvedConveyances Conveyance[]        @relation("ConveyanceApprover")
+  bills               Bill[]              @relation("BillCreator")
+  approvedBills       Bill[]              @relation("BillApprover")
+  monthSalaryDetails  MonthSalaryDetail[]
+  employeeLocations   EmployeeLocation[]
 
   @@map("employees")
 }
@@ -257,13 +260,20 @@ model VehicleType {
 }
 
 model Conveyance {
-  id       Int      @id @default(autoincrement())
-  officeId String
-  employee Employee @relation(fields: [officeId], references: [officeId])
-  date     DateTime
-  amount   Int
-  remarks  String?
-  status   String   @default("Pending")
+  id           Int       @id @default(autoincrement())
+  officeId     String
+  employee     Employee  @relation(fields: [officeId], references: [officeId], name: "ConveyanceCreator", onDelete: NoAction, onUpdate: NoAction)
+  locationId   Int?
+  location     Location? @relation(fields: [locationId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  date         DateTime
+  month        String?
+  year         String?
+  amount       Int
+  remarks      String?
+  approverId   Int?
+  approvedBy   Employee? @relation(fields: [approverId], references: [id], name: "ConveyanceApprover", onDelete: NoAction, onUpdate: NoAction)
+  approvedTime DateTime?
+  status       String    @default("Pending")
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
@@ -297,16 +307,21 @@ model ConveyanceDetail {
 }
 
 model Bill {
-  id         Int       @id @default(autoincrement())
-  isService  Boolean   @default(false)
-  locationId Int?
-  location   Location? @relation(fields: [locationId], references: [id], onUpdate: NoAction, onDelete: NoAction)
-  officeId   String
-  employee   Employee  @relation(fields: [officeId], references: [officeId])
-  date       DateTime
-  amount     Int
-  remarks    String?
-  status     String    @default("Pending")
+  id           Int       @id @default(autoincrement())
+  isService    Boolean   @default(false)
+  locationId   Int?
+  location     Location? @relation(fields: [locationId], references: [id], onUpdate: NoAction, onDelete: NoAction)
+  officeId     String
+  employee     Employee  @relation(fields: [officeId], references: [officeId], name: "BillCreator", onDelete: NoAction, onUpdate: NoAction)
+  date         DateTime
+  month        String?
+  year         String?
+  amount       Int
+  remarks      String?
+  approverId   Int?
+  approvedBy   Employee? @relation(fields: [approverId], references: [id], name: "BillApprover", onDelete: NoAction, onUpdate: NoAction)
+  approvedTime DateTime?
+  status       String    @default("Pending")
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
