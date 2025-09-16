@@ -7,5 +7,6 @@ export const leaveFilterableFields = [
   'startDate',
   'endDate',
   'locationId',
+  'approverId',
   'status',
 ];

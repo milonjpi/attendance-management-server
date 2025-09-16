@@ -92,6 +92,17 @@ const getAllLeaves = async (
           },
         },
       },
+      approvedBy: {
+        include: {
+          designation: true,
+          department: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -119,6 +130,17 @@ const getSingleLeave = async (id: number): Promise<Leave | null> => {
     },
     include: {
       employee: {
+        include: {
+          designation: true,
+          department: true,
+          location: {
+            include: {
+              area: true,
+            },
+          },
+        },
+      },
+      approvedBy: {
         include: {
           designation: true,
           department: true,

@@ -19,6 +19,8 @@ const update = z.object({
     toDate: z.string().optional(),
     days: z.number().optional(),
     remarks: z.string().optional().nullable(),
+    approverId: z.number().optional().nullable(),
+    approvedTime: z.string().optional().nullable(),
     status: z.enum(leaveStatus as [string, ...string[]]).optional(),
   }),
 });

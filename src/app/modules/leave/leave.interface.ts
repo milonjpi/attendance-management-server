@@ -4,5 +4,6 @@ export type ILeaveFilters = {
   startDate?: string;
   endDate?: string;
   locationId?: string;
+  approverId?: string;
   status?: string;
 };
