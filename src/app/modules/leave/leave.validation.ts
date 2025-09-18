@@ -8,6 +8,8 @@ const create = z.object({
     toDate: z.string({ required_error: 'To Date is Required' }),
     days: z.number({ required_error: 'Days is Required' }),
     remarks: z.string().optional().nullable(),
+    approverId: z.number().optional().nullable(),
+    approvedTime: z.string().optional().nullable(),
     status: z.enum(leaveStatus as [string, ...string[]]).optional(),
   }),
 });
