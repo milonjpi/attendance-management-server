@@ -8,6 +8,7 @@ const create = z.object({
     outTime: z.string().optional().nullable(),
     deviceId: z.string().optional().nullable(),
     location: z.string().optional().nullable(),
+    remarks: z.string().optional().nullable(),
     realPunch: z.boolean().optional(),
   }),
 });
@@ -20,6 +21,7 @@ const update = z.object({
     outTime: z.string().optional().nullable(),
     deviceId: z.string().optional().nullable(),
     location: z.string().optional().nullable(),
+    remarks: z.string().optional().nullable(),
     realPunch: z.boolean().optional(),
   }),
 });

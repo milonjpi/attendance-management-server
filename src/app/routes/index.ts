@@ -11,7 +11,6 @@ import { EmployeeRoutes } from '../modules/employee/employee.route';
 import { AttendanceRoutes } from '../modules/attendance/attendance.route';
 import { ReportRoutes } from '../modules/report/report.route';
 import { ProfileRoutes } from '../modules/profile/profile.route';
-import { DeviceRoutes } from '../modules/device/device.route';
 import { LeaveRoutes } from '../modules/leave/leave.route';
 import { AreaRoutes } from '../modules/area/area.route';
 import { SalaryRoutes } from '../modules/salary/salary.route';
@@ -88,10 +87,6 @@ const moduleRoutes = [
   {
     path: '/transfer',
     route: TransferRoutes,
-  },
-  {
-    path: '/device',
-    route: DeviceRoutes,
   },
   {
     path: '/report',

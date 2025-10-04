@@ -184,6 +184,7 @@ model Attendance {
   outTime   DateTime?
   deviceId  String?
   location  String?
+  remarks   String?
   realPunch Boolean   @default(true)
 
   @@map("attendances")
