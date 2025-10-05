@@ -24,6 +24,7 @@ import { UomRoutes } from '../modules/uom/uom.route';
 import { BillRoutes } from '../modules/bill/bill.route';
 import { MonthSalaryRoutes } from '../modules/monthSalary/monthSalary.route';
 import { MonthSalaryDetailRoutes } from '../modules/monthSalaryDetail/monthSalaryDetail.route';
+import { BulkRoutes } from '../modules/bulk/bulk.route';
 
 const router = express.Router();
 
@@ -127,6 +128,10 @@ const moduleRoutes = [
   {
     path: '/month-salary-detail',
     route: MonthSalaryDetailRoutes,
+  },
+  {
+    path: '/bulk',
+    route: BulkRoutes,
   },
 ];
 
