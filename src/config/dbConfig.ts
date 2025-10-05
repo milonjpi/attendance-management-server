@@ -2,7 +2,7 @@ const config = {
   user: 'sa',
   password: 'Testbat1#',
   server: '192.168.1.24',
-  database: 'NitgenAccessManager',
+  database: 'tbzAttendanceDB',
   options: {
     encrypt: false,
     trustedconnection: true,
