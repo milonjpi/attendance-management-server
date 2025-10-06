@@ -4,6 +4,7 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import {
+  IEmployeeConveyance,
   IEmployeeReportFilters,
   IEmployeeSalary,
   IExpenseSummaryFilter,
@@ -63,7 +64,7 @@ const getEmployeesReport = async (
   if (startDate) {
     attendanceConditions.push({
       date: {
-        gte: moment.utc(`${startDate}T00:00:00Z`).toDate(),
+        gte: moment(`${startDate}T00:00:00Z`).toDate(),
       },
     });
   }
@@ -71,7 +72,7 @@ const getEmployeesReport = async (
   if (endDate) {
     attendanceConditions.push({
       date: {
-        lte: moment.utc(`${endDate}T23:59:59Z`).toDate(),
+        lte: moment(`${endDate}T23:59:59Z`).toDate(),
       },
     });
   }
@@ -163,7 +164,7 @@ const getSalaryReport = async (
   if (startDate) {
     attendanceConditions.push({
       date: {
-        gte: moment.utc(`${startDate}T00:00:00Z`).toDate(),
+        gte: moment(`${startDate}T00:00:00Z`).toDate(),
       },
     });
 
@@ -177,7 +178,7 @@ const getSalaryReport = async (
   if (endDate) {
     attendanceConditions.push({
       date: {
-        lte: moment.utc(`${endDate}T23:59:59Z`).toDate(),
+        lte: moment(`${endDate}T23:59:59Z`).toDate(),
       },
     });
     leaveConditions.push({
@@ -569,10 +570,59 @@ const expenseSummaryByMonth = async (
   return results;
 };
 
+const employeeConveyanceSummary = async (
+  filters: IExpenseSummaryFilter
+): Promise<IEmployeeConveyance[]> => {
+  const { year, month, locationId } = filters;
+
+  const andConditions = [];
+
+  if (year) {
+    andConditions.push({
+      year,
+    });
+  }
+
+  if (month) {
+    andConditions.push({
+      month,
+    });
+  }
+
+  if (locationId) {
+    andConditions.push({
+      id: Number(locationId),
+    });
+  }
+
+  const whereConditions: Prisma.ConveyanceWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const employees = await prisma.employee.findMany();
+
+  const result = await prisma.conveyance.groupBy({
+    where: whereConditions,
+    by: ['officeId'],
+    _sum: {
+      amount: true,
+    },
+    orderBy: {
+      officeId: 'asc',
+    },
+  });
+  const mappedResult = result?.map(el => ({
+    employee: employees?.find(bl => bl.officeId === el.officeId),
+    amount: el._sum.amount || 0,
+  }));
+
+  return mappedResult;
+};
+
 export const ReportService = {
   getEmployeesReport,
   getSalaryReport,
   expenseSummary,
   expenseSummaryByYear,
   expenseSummaryByMonth,
+  employeeConveyanceSummary,
 };

@@ -22,6 +22,12 @@ router.get(
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   ReportController.expenseSummary
 );
+// employee conveyance
+router.get(
+  '/employee-conveyance',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  ReportController.employeeConveyanceSummary
+);
 // expense summary year
 router.get(
   '/expense-summary-year',

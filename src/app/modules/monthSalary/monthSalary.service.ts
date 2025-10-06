@@ -59,12 +59,12 @@ const insertIntoDB = async (data: MonthSalary): Promise<MonthSalary | null> => {
 
   attendanceConditions.push({
     date: {
-      gte: moment.utc(`${startDate}T00:00:00Z`).toDate(),
+      gte: moment(`${startDate}T00:00:00Z`).toDate(),
     },
   });
   attendanceConditions.push({
     date: {
-      lte: moment.utc(`${endDate}T23:59:59Z`).toDate(),
+      lte: moment(`${endDate}T23:59:59Z`).toDate(),
     },
   });
 

@@ -11,6 +11,7 @@ import sendResponse from '../../../shared/sendResponse';
 import { Employee } from '@prisma/client';
 import httpStatus from 'http-status';
 import {
+  IEmployeeConveyance,
   IEmployeeSalary,
   IExpenseSummaryMonthResponse,
   IExpenseSummaryResponse,
@@ -94,10 +95,27 @@ const expenseSummaryByMonth = catchAsync(
   }
 );
 
+// get employee wise conveyance
+const employeeConveyanceSummary = catchAsync(
+  async (req: Request, res: Response) => {
+    const filters = pick(req.query, expenseSummaryFilterableFields);
+
+    const result = await ReportService.employeeConveyanceSummary(filters);
+
+    sendResponse<IEmployeeConveyance[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Expense summary retrieved successfully',
+      data: result,
+    });
+  }
+);
+
 export const ReportController = {
   getEmployeesReport,
   getSalaryReport,
   expenseSummary,
   expenseSummaryByYear,
   expenseSummaryByMonth,
+  employeeConveyanceSummary,
 };

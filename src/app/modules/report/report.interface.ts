@@ -1,4 +1,4 @@
-import { Location } from '@prisma/client';
+import { Employee, Location } from '@prisma/client';
 
 export type IEmployeeReportFilters = {
   searchTerm?: string;
@@ -65,4 +65,10 @@ export type IExpenseSummaryLocation = {
 export type IExpenseSummaryMonthResponse = {
   month: string;
   locations: IExpenseSummaryLocation[];
+};
+
+// employee wise conveyance summary
+export type IEmployeeConveyance = {
+  employee: Employee | undefined;
+  amount: number;
 };
